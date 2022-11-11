@@ -35,16 +35,15 @@ describe('trinsic v2', async() => {
 	// ------------------
 	// second test
 	// conduct test after second test using 10 min email test
-	it("trinsic ecosystem account create test", async() => {
+	it("trinsic account validate test", async() => {
 		const res = await server.inject({
 			method: "POST",
 			payload: {
-				"data":{
-				"challenge":{"type":"Buffer","data":[25,145,191,76,201,110,247,175,113,186,215,181,175,64,92,148,240,182,159,225,243,242,43,15,134,200,33,142,209,82,108,17]},
-			 "otp":"575975"}},
-			url: "/trinsicRegisterAccount",
+				"challenge":{"type":"Buffer","data":[228,14,254,96,138,12,112,220,116,205,209,36,136,160,69,83,123,136,45,63,127,177,88,135,142,120,72,9,196,48,173,206]}
+			},
+			url: "/trinsicRegisterAccount/804483",
 		});
-		// console.log(res.result);
+		// console.log(res);
 		expect(res.statusCode).to.equal(200);
 		expect(res.result).to.equal(`trinsic account created`);
 	});
