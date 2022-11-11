@@ -48,8 +48,9 @@ async function createOrLoginAccount(request: Request, responseToolkit: ResponseT
 // request: challenge, otp
 // response: (account profile: auth_data, auth_token, profile_type, protection)
 async function registerAccount(request: Request, responseToolkit: ResponseToolkit): Promise<ResponseObject> {
-	console.log(request.params.otp);
-	console.log((request.payload as any).challenge);
+	console.log(process.env.AUTHTOKEN);
+	console.log((request.payload as any).data.otp);
+	console.log((request.payload as any).data.challenge);
 	
 	const trinsic = new TrinsicService();
 	
@@ -59,9 +60,9 @@ async function registerAccount(request: Request, responseToolkit: ResponseToolki
 	// todo: validate that one_time_pin and challenge fields was sent thorugh using joi
 	// todo: verify no escape characters in request
 	const authToken = await trinsic.account()
-		.loginConfirm((request.payload as any).challenge, request.params.otp);
+		.loginConfirm((request.payload as any).data.challenge, (request.payload as any).data.otp);
 	
-	console.log(`${authToken}`);
+	console.log(authToken);
 	
 	const response = responseToolkit.response(`trinsic account created`);
 	return response;
@@ -77,7 +78,7 @@ export const trinsicAccount: ServerRoute[] = [
 	},
 	{
 		method: 'POST',
-		path: '/trinsicRegisterAccount/{otp}',
+		path: '/trinsicRegisterAccount',
 		handler: registerAccount
 	}
 ]
