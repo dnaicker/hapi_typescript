@@ -57,9 +57,9 @@ async function registerAccount(request: Request, responseToolkit: ResponseToolki
 	// todo: validate that one_time_pin and challenge fields was sent thorugh using joi
 	// todo: verify no escape characters in request
 	const authToken = await trinsic.account()
-		.loginConfirm((
-			request.payload as any).challenge,
-			request.params.otp);
+		.loginConfirm(
+			new Uint8Array((request.payload as any).challenge),
+			(request.payload as any).otp);
 	
 	console.log('auth token',authToken);
 	

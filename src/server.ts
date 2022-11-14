@@ -28,6 +28,15 @@ export const init = async function(): Promise<Server> {
 	server.route(trinsicEcoSystemInfo);
 	server.route(trinsicAccount);
 
+	server.route({
+		method: '*',
+		path: '/{any*}',
+		handler: function (request, h) {
+
+				return '404 Error! Page Not Found!';
+		}
+	});
+	
 	return server;
 };
 

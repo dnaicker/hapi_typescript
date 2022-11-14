@@ -39,9 +39,10 @@ describe('trinsic v2', async() => {
 		const res = await server.inject({
 			method: "POST",
 			payload: {
-				"challenge":{"type":"Buffer","data":[228,14,254,96,138,12,112,220,116,205,209,36,136,160,69,83,123,136,45,63,127,177,88,135,142,120,72,9,196,48,173,206]}
+				"challenge":[228,14,254,96,138,12,112,220,116,205,209,36,136,160,69,83,123,136,45,63,127,177,88,135,142,120,72,9,196,48,173,206],
+				"otp": "804483"
 			},
-			url: "/trinsicRegisterAccount/804483",
+			url: "/trinsicRegisterAccount",
 		});
 		// console.log(res);
 		expect(res.statusCode).to.equal(200);
