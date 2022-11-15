@@ -17,6 +17,10 @@ import {
 import { Request, ResponseToolkit, ResponseObject, ServerRoute } from '@hapi/hapi'
 import { v4 as uuid } from "uuid";
 
+const trinsic = new TrinsicService();
+
+// set company ecosystem authtoken
+trinsic.setAuthToken(process.env.AUTHTOKEN || "");
 
 function getFieldType(type: String): FieldType {
 	switch (type.toLowerCase()) {
@@ -38,7 +42,7 @@ function createTemplateFields(request: Request): any {
 	let fields: any = [];
 
 	// create a dynamic templatefield for Trinsic
-	(request.payload as any).data.fields.forEach((field: any) => {
+	(request.payload as any).credential_template_fields.forEach((field: any) => {
 		// create new field object	
 		let obj: any = {};
 
@@ -58,24 +62,19 @@ function createTemplateFields(request: Request): any {
 // request: authKey, JSON ["data": {"title":"", "fields":[{"name":"", "type":"", "description": ""}]}
 // JSON field data types: bool, datetime, number, string
 async function createCredentialTemplate(request: Request, responseToolkit: ResponseToolkit): Promise<ResponseObject> {
-	// start Trinsic Service
-	const trinsic = new TrinsicService();
-
-	// set company ecosystem authtoken
-	trinsic.setAuthToken(process.env.AUTHTOKEN || "");
-
-	// get user account auth token from params
-	const accountAuthToken = (request.payload as any).accountAuthToken;
+	// set user auth token
+	trinsic.options.authToken = (request.payload as any).auth_token;
 
 	// create credential temlpate from JSON data from params
 	let credentialTemplate = CreateCredentialTemplateRequest.fromPartial({
-		name: `${(request.payload as any).data.title}-${uuid()}`,
+		name: `${(request.payload as any).credential_template_title}-${uuid()}`,
 		fields: createTemplateFields(request),
 	});
 
 	// send request to Trinsic
 	const result = await trinsic.template().create(credentialTemplate);
 	const template = result.data;
+
 	console.log(template);
 
 	// REST response
@@ -85,8 +84,24 @@ async function createCredentialTemplate(request: Request, responseToolkit: Respo
 
 // -------------
 // insert credential values into credential template 
+// request: template_id, credential_values
 // wallet holder
-async function insertCredentialTemplateValues(request: Request, responseToolkit: ResponseToolkit): Promise<ResponseObject> {
+async function createCredential(request: Request, responseToolkit: ResponseToolkit): Promise<ResponseObject> {
+	// set account token
+	trinsic.options.authToken = (request.payload as any).auth_token;
+
+	// todo: validate template using joi
+
+	// send request to Trinsic
+	const issueResponse = await trinsic.credential().issueFromTemplate(
+		IssueFromTemplateRequest.fromPartial({
+			templateId: (request.payload as any).template_id,
+			valuesJson: JSON.stringify((request.payload as any).credential_values),
+		})
+	);
+
+	console.log('issueResponse ', issueResponse)
+
 	const response = responseToolkit.response("insertCredentialTemplateValues");
 	return response;
 }
@@ -94,20 +109,43 @@ async function insertCredentialTemplateValues(request: Request, responseToolkit:
 // -------------
 // issue credential / create credential
 // issuer
-// request: authKey, credentialTemplateId, credentialValues
+// request: auth_token, credential_document
 // response credentialData
-async function createCredential(request: Request, responseToolkit: ResponseToolkit): Promise<ResponseObject> {
+async function storeCredential(request: Request, responseToolkit: ResponseToolkit): Promise<ResponseObject> {
+	// set account token
+	trinsic.options.authToken = (request.payload as any).auth_token;
+
+	const insertResponse = await trinsic.wallet().insertItem(
+		InsertItemRequest.fromPartial({
+			itemJson: (request.payload as any).credential_document,
+		})
+	);
+
+	console.log(insertResponse)
+
 	const response = responseToolkit.response("createCredential");
 	return response;
 }
 
 // -------------
-// send credential / email credential
+// create credential proof
 // issuer
-// request: email, credentialData
+// request: auth_token, credential_id
 // response: message to say complete
-async function sendCredential(request: Request, responseToolkit: ResponseToolkit): Promise<ResponseObject> {
-	const response = responseToolkit.response("sendCredential");
+async function createCredentialProof(request: Request, responseToolkit: ResponseToolkit): Promise<ResponseObject> {
+	trinsic.options.authToken = (request.payload as any).auth_token;
+	console.log((request.payload as any).auth_token)
+	console.log((request.payload as any).credential_id)
+
+	const proofResponse = await trinsic.credential().createProof(
+			CreateProofRequest.fromPartial({
+					itemId: (request.payload as any).credential_id,
+			})
+	);
+
+	console.log(proofResponse);
+	
+	const response = responseToolkit.response("createCredentialProof");
 	return response;
 }
 
@@ -116,8 +154,18 @@ async function sendCredential(request: Request, responseToolkit: ResponseToolkit
 // wallet holder
 // request: authKey, credentialData
 // response: credentialId
-async function saveCredential(request: Request, responseToolkit: ResponseToolkit): Promise<ResponseObject> {
-	const response = responseToolkit.response("saveCredential");
+async function verifyCredentialProof(request: Request, responseToolkit: ResponseToolkit): Promise<ResponseObject> {
+	trinsic.options.authToken = (request.payload as any).auth_token;
+	
+	const verifyResponse = await trinsic.credential().verifyProof(
+		VerifyProofRequest.fromPartial({
+				proofDocumentJson: (request.payload as any).credential_proof,
+		})
+	);
+
+	console.log(verifyResponse);
+
+	const response = responseToolkit.response("verifyCredentialProof");
 	return response;
 }
 
@@ -132,21 +180,21 @@ export const trinsicVerifiableCredentials: ServerRoute[] = [
 	{
 		method: 'POST',
 		path: '/insertCredentialTemplateValues',
-		handler: insertCredentialTemplateValues
-	},
-	{
-		method: 'POST',
-		path: '/createCredential',
 		handler: createCredential
 	},
 	{
 		method: 'POST',
-		path: '/sendCredential',
-		handler: sendCredential
+		path: '/createCredential',
+		handler: storeCredential
 	},
 	{
 		method: 'POST',
-		path: '/saveCredential',
-		handler: saveCredential
+		path: '/createCredentialProof',
+		handler: createCredentialProof
+	},
+	{
+		method: 'POST',
+		path: '/verifyCredentialProof',
+		handler: verifyCredentialProof
 	},
 ]
