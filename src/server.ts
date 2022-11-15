@@ -3,6 +3,7 @@ import { Request, Server } from "@hapi/hapi";
 import {helloRoutes} from "./hello";
 import { trinsicAccount } from "./trinsicv2Account";
 import {trinsicEcoSystemInfo} from "./trinsicv2Ecosystem";
+import {trinsicVerifiableCredentials} from "./trinsicV2VerifiableCredentials";
 
 export let server: Server;
 
@@ -27,6 +28,7 @@ export const init = async function(): Promise<Server> {
 	
 	server.route(trinsicEcoSystemInfo);
 	server.route(trinsicAccount);
+	server.route(trinsicVerifiableCredentials);
 
 	server.route({
 		method: '*',

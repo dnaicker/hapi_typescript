@@ -37,21 +37,18 @@ function getFieldType(type: String): FieldType {
 function createTemplateFields(request: Request): any {
 	let fields: any = [];
 
-	// traverse through JSON data sent 
-	for (let result of (request.payload as any).data.fields) {
+	// create a dynamic templatefield for Trinsic
+	(request.payload as any).data.fields.forEach((field: any) => {
 		// create new field object	
 		let obj: any = {};
-		
-		// create a dynamic templatefield for Trinsic
-		result.fields.forEach((field: any) => {
-			obj[field.name] = TemplateField.fromPartial({
-				type: getFieldType(field.type),
-				description: field.description
-			});
 
-			fields.push(obj);
+		obj[field.name] = TemplateField.fromPartial({
+			type: getFieldType(field.type),
+			description: field.description
 		});
-	}
+
+		fields.push(obj);
+	});
 }
 
 // -------------
@@ -59,7 +56,7 @@ function createTemplateFields(request: Request): any {
 // create template
 // actor: issuer
 // request: authKey, JSON ["data": {"title":"", "fields":[{"name":"", "type":"", "description": ""}]}
-						// JSON field data types: bool, datetime, number, string
+// JSON field data types: bool, datetime, number, string
 async function createCredentialTemplate(request: Request, responseToolkit: ResponseToolkit): Promise<ResponseObject> {
 	// start Trinsic Service
 	const trinsic = new TrinsicService();
@@ -69,7 +66,7 @@ async function createCredentialTemplate(request: Request, responseToolkit: Respo
 
 	// get user account auth token from params
 	const accountAuthToken = (request.payload as any).accountAuthToken;
-	
+
 	// create credential temlpate from JSON data from params
 	let credentialTemplate = CreateCredentialTemplateRequest.fromPartial({
 		name: `${(request.payload as any).data.title}-${uuid()}`,
@@ -126,7 +123,7 @@ async function saveCredential(request: Request, responseToolkit: ResponseToolkit
 
 
 //-------------------
-export const trinsicAccount: ServerRoute[] = [
+export const trinsicVerifiableCredentials: ServerRoute[] = [
 	{
 		method: 'POST',
 		path: '/createCredentialTemplate',

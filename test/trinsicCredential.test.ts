@@ -24,13 +24,13 @@ describe('test suite', async() => {
 			method: "POST",
 			payload: {
 				"data": {
-					"accountAuthToken": "",
-					"title": "credential title test",
+					"accountAuthToken": "CiVodHRwczovL3RyaW5zaWMuaWQvc2VjdXJpdHkvdjEvb2Jlcm9uEkwKKnVybjp0cmluc2ljOndhbGxldHM6VW45TGpFNUVjN0ZCUFRvNzFURFpVQSIedXJuOnRyaW5zaWM6ZWNvc3lzdGVtczpkZWZhdWx0GjCAevCcnadUa3HuncGb_YN6BFwU-jgBzgZZHR4hABloaRWyEVo2T1uqFz0lOTWSrf0iAA",
+					"title": "credential title test 2",
 					"fields": [
 						{
-							"name": "name1",
+							"name": "test name 2",
 							"type": "string",
-							"description": "test"
+							"description": "test description 2"
 						}
 					]
 				} 
@@ -44,63 +44,63 @@ describe('test suite', async() => {
 	
 	//-------------------
 	// Request: json body of fields
-	it("insertCredentialTemplateValues", async() => {
-		const res = await server.inject({
-			method: "POST",
-			payload: {
+	// it("insertCredentialTemplateValues", async() => {
+	// 	const res = await server.inject({
+	// 		method: "POST",
+	// 		payload: {
 				
-			},
-			url: "/insertCredentialTemplateValues",
-		});
+	// 		},
+	// 		url: "/insertCredentialTemplateValues",
+	// 	});
 
-		expect(res.statusCode).to.equal(200);
-		expect(res.result).to.equal(`insertCredentialTemplateValues`);
-	});
+	// 	expect(res.statusCode).to.equal(200);
+	// 	expect(res.result).to.equal(`insertCredentialTemplateValues`);
+	// });
 	
 	//-------------------
 	// request: authKey, credentialTemplateId, credentialValues
-	it("createCredential", async() => {
-		const res = await server.inject({
-			method: "POST",
-			payload: {
+	// it("createCredential", async() => {
+	// 	const res = await server.inject({
+	// 		method: "POST",
+	// 		payload: {
 				
-			},
-			url: "/createCredential",
-		});
+	// 		},
+	// 		url: "/createCredential",
+	// 	});
 
-		expect(res.statusCode).to.equal(200);
-		expect(res.result).to.equal(`createCredential`);
-	});
+	// 	expect(res.statusCode).to.equal(200);
+	// 	expect(res.result).to.equal(`createCredential`);
+	// });
 	
 	//-------------------
 	// request: email, credentialData
-	it("sendCredential", async() => {
-		const res = await server.inject({
-			method: "POST",
-			payload: {
+	// it("sendCredential", async() => {
+	// 	const res = await server.inject({
+	// 		method: "POST",
+	// 		payload: {
 				
-			},
-			url: "/sendCredential",
-		});
+	// 		},
+	// 		url: "/sendCredential",
+	// 	});
 
-		expect(res.statusCode).to.equal(200);
-		expect(res.result).to.equal(`sendCredential`);
-	});
+	// 	expect(res.statusCode).to.equal(200);
+	// 	expect(res.result).to.equal(`sendCredential`);
+	// });
 	
 	//-------------------
 	// request: authKey, credentialData
-	it("saveCredential", async() => {
-		const res = await server.inject({
-			method: "POST",
-			payload: {
+	// it("saveCredential", async() => {
+	// 	const res = await server.inject({
+	// 		method: "POST",
+	// 		payload: {
 				
-			},
-			url: "/saveCredential",
-		});
+	// 		},
+	// 		url: "/saveCredential",
+	// 	});
 
-		expect(res.statusCode).to.equal(200);
-		expect(res.result).to.equal(`saveCredential`);
-	});
+	// 	expect(res.statusCode).to.equal(200);
+	// 	expect(res.result).to.equal(`saveCredential`);
+	// });
 
 
 })

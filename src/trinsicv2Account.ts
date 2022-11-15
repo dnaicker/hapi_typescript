@@ -49,10 +49,17 @@ async function createOrLoginAccount(request: Request, responseToolkit: ResponseT
 // response: (account profile: auth_data, auth_token, profile_type, protection)
 async function registerAccount(request: Request, responseToolkit: ResponseToolkit): Promise<ResponseObject> {
 	
+	console.log('---------------');
+	
 	const trinsic = new TrinsicService();
 	
 	// set orginisation auth token
 	trinsic.setAuthToken(process.env.AUTHTOKEN || "");
+
+	console.log(process.env.AUTHTOKEN);
+	console.log((request.payload as any).challenge);
+	console.log((request.payload as any).otp);
+
 
 	// todo: validate that one_time_pin and challenge fields was sent thorugh using joi
 	// todo: verify no escape characters in request
@@ -77,7 +84,7 @@ export const trinsicAccount: ServerRoute[] = [
 	},
 	{
 		method: 'POST',
-		path: '/trinsicRegisterAccount/{otp}',
+		path: '/trinsicRegisterAccount',
 		handler: registerAccount
 	}
 ]
