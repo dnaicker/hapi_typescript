@@ -81,7 +81,7 @@ async function createCredentialTemplate(request: Request, responseToolkit: Respo
 	console.log(template);
 
 	// REST response
-	const response = responseToolkit.response("createCredentialTemplate");
+	const response = responseToolkit.response(template);
 	return response;
 }
 
