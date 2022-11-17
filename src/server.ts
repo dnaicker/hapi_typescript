@@ -15,7 +15,10 @@ function index(request: Request): string {
 export const init = async function(): Promise<Server> {
 	server = Hapi.server({
 		port: process.env.PORT || 4000,
-		host: '0.0.0.0'
+		host: '0.0.0.0',
+		routes: {
+			cors: true
+		}
 	});
 	
 	// server.route({

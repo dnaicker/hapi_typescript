@@ -38,11 +38,11 @@ function getFieldType(type: String): FieldType {
 }
 
 // create array of fields with FieldType datatypes
-function createTemplateFields(request: Request): any {
+function createTemplateFields(credential_template_fields: any): any {
 	let fields: any = [];
 
 	// create a dynamic templatefield for Trinsic
-	(request.payload as any).credential_template_fields.forEach((field: any) => {
+	credential_template_fields.forEach((field: any) => {
 		// create new field object	
 		let obj: any = {};
 
@@ -59,16 +59,19 @@ function createTemplateFields(request: Request): any {
 // POST
 // create template
 // actor: issuer
-// request: authKey, JSON ["data": {"title":"", "fields":[{"name":"", "type":"", "description": ""}]}
+// request: auth_token, JSON ["data": {"credential_template_title":"", "credential_template_fields":[{"name":"", "type":"", "description": ""}]}
 // JSON field data types: bool, datetime, number, string
 async function createCredentialTemplate(request: Request, responseToolkit: ResponseToolkit): Promise<ResponseObject> {
+	
+	console.log(request.payload);
+
 	// set user auth token
 	trinsic.options.authToken = (request.payload as any).auth_token;
 
 	// create credential temlpate from JSON data from params
 	let credentialTemplate = CreateCredentialTemplateRequest.fromPartial({
 		name: `${(request.payload as any).credential_template_title}-${uuid()}`,
-		fields: createTemplateFields(request),
+		fields: createTemplateFields(JSON.parse((request.payload as any).credential_template_fields)),
 	});
 
 	// send request to Trinsic
@@ -169,7 +172,6 @@ async function verifyCredentialProof(request: Request, responseToolkit: Response
 	return response;
 }
 
-
 //-------------------
 export const trinsicVerifiableCredentials: ServerRoute[] = [
 	{
@@ -193,8 +195,12 @@ export const trinsicVerifiableCredentials: ServerRoute[] = [
 		handler: createCredentialProof
 	},
 	{
-		method: 'POST',
+		method: 'PUT',
 		path: '/verifyCredentialProof',
 		handler: verifyCredentialProof
 	},
 ]
+
+
+// todo: mask fields to show during verification process
+// todo: update revcation status of credential
