@@ -13,12 +13,14 @@ import {
 	ServiceOptions,
 	EcosystemInfoRequest,
 	LoginRequest,
+	SearchCredentialTemplatesRequest
 } from "@trinsic/trinsic";
 import { Request, ResponseToolkit, ResponseObject, ServerRoute } from '@hapi/hapi'
 import { v4 as uuid } from "uuid";
 
 const trinsic = new TrinsicService();
 
+// -------------
 // set company ecosystem authtoken
 trinsic.setAuthToken(process.env.AUTHTOKEN || "");
 
@@ -37,6 +39,7 @@ function getFieldType(type: String): FieldType {
 	}
 }
 
+// -------------
 // create array of fields with FieldType datatypes
 function createTemplateFields(credential_template_fields: any): any {
 	let fields: any = [];
@@ -105,7 +108,7 @@ async function createCredential(request: Request, responseToolkit: ResponseToolk
 
 	console.log('issueResponse ', issueResponse)
 
-	const response = responseToolkit.response("insertCredentialTemplateValues");
+	const response = responseToolkit.response(issueResponse);
 	return response;
 }
 
@@ -126,7 +129,7 @@ async function storeCredential(request: Request, responseToolkit: ResponseToolki
 
 	console.log(insertResponse)
 
-	const response = responseToolkit.response("createCredential");
+	const response = responseToolkit.response(insertResponse);
 	return response;
 }
 
@@ -148,7 +151,7 @@ async function createCredentialProof(request: Request, responseToolkit: Response
 
 	console.log(proofResponse);
 	
-	const response = responseToolkit.response("createCredentialProof");
+	const response = responseToolkit.response(proofResponse);
 	return response;
 }
 
@@ -168,7 +171,24 @@ async function verifyCredentialProof(request: Request, responseToolkit: Response
 
 	console.log(verifyResponse);
 
-	const response = responseToolkit.response("verifyCredentialProof");
+	const response = responseToolkit.response(verifyResponse);
+	return response;
+}
+
+// -------------
+// store credential / insert credential into owners wallet 
+// wallet holder
+// request: authKey, query
+// response: credentialId
+async function searchTemplate(request: Request, responseToolkit: ResponseToolkit): Promise<ResponseObject> {
+	console.log(request.payload);
+	trinsic.options.authToken = (request.payload as any).auth_token;
+	
+	const searchResponse = await trinsic.template().search(SearchCredentialTemplatesRequest.fromPartial({query: (request.payload as any).query}));
+
+	console.log(searchResponse);
+
+	const response = responseToolkit.response(searchResponse);
 	return response;
 }
 
@@ -199,8 +219,14 @@ export const trinsicVerifiableCredentials: ServerRoute[] = [
 		path: '/verifyCredentialProof',
 		handler: verifyCredentialProof
 	},
+	{
+		method: 'POST',
+		path: '/searchTemplate',
+		handler: searchTemplate
+	},
 ]
 
 
 // todo: mask fields to show during verification process
-// todo: update revcation status of credential
+// todo: add api calls revcation status of credential
+// todo: add api calls for trustworthy registration 
