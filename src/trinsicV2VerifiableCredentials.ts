@@ -13,7 +13,8 @@ import {
 	ServiceOptions,
 	EcosystemInfoRequest,
 	LoginRequest,
-	SearchCredentialTemplatesRequest
+	SearchCredentialTemplatesRequest,
+	GetCredentialTemplateRequest
 } from "@trinsic/trinsic";
 import { Request, ResponseToolkit, ResponseObject, ServerRoute } from '@hapi/hapi'
 import { v4 as uuid } from "uuid";
@@ -136,7 +137,7 @@ async function storeCredential(request: Request, responseToolkit: ResponseToolki
 // -------------
 // create credential proof
 // issuer
-// request: auth_token, credential_id
+// request: auth_token (String), credential_id (String)
 // response: message to say complete
 async function createCredentialProof(request: Request, responseToolkit: ResponseToolkit): Promise<ResponseObject> {
 	trinsic.options.authToken = (request.payload as any).auth_token;
@@ -158,7 +159,7 @@ async function createCredentialProof(request: Request, responseToolkit: Response
 // -------------
 // store credential / insert credential into owners wallet 
 // wallet holder
-// request: authKey, credentialData
+// request: authKey (String), credentialData
 // response: credentialId
 async function verifyCredentialProof(request: Request, responseToolkit: ResponseToolkit): Promise<ResponseObject> {
 	trinsic.options.authToken = (request.payload as any).auth_token;
@@ -192,6 +193,26 @@ async function searchTemplate(request: Request, responseToolkit: ResponseToolkit
 	return response;
 }
 
+// -------------
+// get credential template 
+// request: authKey, query
+// response: credentialId
+async function getCredentialTemplate(request: Request, responseToolkit: ResponseToolkit): Promise<ResponseObject> {
+	const trinsic = new TrinsicService();
+
+	trinsic.setAuthToken(process.env.AUTHTOKEN || "");
+
+	console.log(request.payload);
+	
+	trinsic.options.authToken = (request.payload as any).auth_token;
+	
+	const getTemplateData = await trinsic.template().get(GetCredentialTemplateRequest.fromPartial({id: (request.payload as any).id}));
+	console.log(getTemplateData);
+
+	const response = responseToolkit.response(getTemplateData);
+	return response;
+}
+
 //-------------------
 export const trinsicVerifiableCredentials: ServerRoute[] = [
 	{
@@ -201,12 +222,12 @@ export const trinsicVerifiableCredentials: ServerRoute[] = [
 	},
 	{
 		method: 'POST',
-		path: '/insertCredentialTemplateValues',
+		path: '/createCredential',
 		handler: createCredential
 	},
 	{
 		method: 'POST',
-		path: '/createCredential',
+		path: '/storeCredential',
 		handler: storeCredential
 	},
 	{
@@ -223,6 +244,11 @@ export const trinsicVerifiableCredentials: ServerRoute[] = [
 		method: 'POST',
 		path: '/searchTemplate',
 		handler: searchTemplate
+	},
+	{
+		method: 'POST',
+		path: '/getCredentialTemplate',
+		handler: getCredentialTemplate
 	},
 ]
 

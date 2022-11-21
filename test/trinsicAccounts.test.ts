@@ -39,12 +39,12 @@ describe('trinsic v2', async() => {
 		const res = await server.inject({
 			method: "POST",
 			payload: {
-				"challenge":[229,135,148,199,38,118,254,8,196,159,60,206,8,240,184,35,68,5,8,190,157,151,99,221,169,87,45,2,47,137,217,117],
-				"otp": "791137"
+				"challenge":[179,111,178,67,83,232,128,115,108,22,210,251,88,76,49,241,130,55,241,103,52,30,203,248,28,1,82,51,130,37,87,126],
+				"otp": "369714"
 			},
 			url: "/trinsicRegisterAccount",
 		});
-		// console.log(res);
+		console.log(res);
 		expect(res.statusCode).to.equal(200);
 		expect(res.result).to.equal(`trinsic account created`);
 	});
