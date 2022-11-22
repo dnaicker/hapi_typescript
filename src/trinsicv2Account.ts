@@ -70,7 +70,7 @@ async function registerAccount(request: Request, responseToolkit: ResponseToolki
 	
 	console.log('auth token',authToken);
 	
-	const response = responseToolkit.response(`trinsic account created`);
+	const response = responseToolkit.response(authToken);
 	return response;
 }
 

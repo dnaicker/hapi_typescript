@@ -46,6 +46,5 @@ describe('trinsic v2', async() => {
 		});
 		console.log(res);
 		expect(res.statusCode).to.equal(200);
-		expect(res.result).to.equal(`trinsic account created`);
 	});
 })
