@@ -109,18 +109,49 @@ describe('test suite', async () => {
 
 	//-------------------
 	// request: authKey, credentialData
-	it("searchTemplate", async() => {
+	// it("searchTemplate", async() => {
+	// 	const res = await server.inject({
+	// 		method: "POST",
+	// 		payload: {
+	// 			"auth_token": "CiVodHRwczovL3RyaW5zaWMuaWQvc2VjdXJpdHkvdjEvb2Jlcm9uEmAKKnVybjp0cmluc2ljOndhbGxldHM6TmFBUVpvN3FDWWdrMk45TExta1RUQiIydXJuOnRyaW5zaWM6ZWNvc3lzdGVtczp2aWdvcm91cy1rZWxsZXItRllSR2ZkRVdaWHQaMJK76tJBHrph2GiNhsBiS6oH7YbkvoF7ESrWLjKxiPy8rZFyxrBO8ZyHqBwxdPYA1CIA",
+	// 			"query": 'SELECT * FROM c'
+	// 		},
+	// 		url: "/searchTemplate",
+	// 	});
+
+	// 	expect(res.statusCode).to.equal(200);
+	// 	expect(res.result).to.equal(`searchTemplate`);
+	// });
+
+	//-------------------
+	// request: authKey, credentialData
+	// it("searchWallet", async() => {
+	// 	const res = await server.inject({
+	// 		method: "POST",
+	// 		payload: {
+	// 			"auth_token": "CiVodHRwczovL3RyaW5zaWMuaWQvc2VjdXJpdHkvdjEvb2Jlcm9uEmAKKnVybjp0cmluc2ljOndhbGxldHM6TmFBUVpvN3FDWWdrMk45TExta1RUQiIydXJuOnRyaW5zaWM6ZWNvc3lzdGVtczp2aWdvcm91cy1rZWxsZXItRllSR2ZkRVdaWHQaMJK76tJBHrph2GiNhsBiS6oH7YbkvoF7ESrWLjKxiPy8rZFyxrBO8ZyHqBwxdPYA1CIA",
+	// 			"query": 'SELECT * FROM c'
+	// 		},
+	// 		url: "/searchWallet",
+	// 	});
+
+	// 	expect(res.statusCode).to.equal(200);
+	// });
+
+	//-------------------
+	// request: authKey, credentialData
+	it("emailCredential", async() => {
 		const res = await server.inject({
 			method: "POST",
 			payload: {
-				"auth_token": "CiVodHRwczovL3RyaW5zaWMuaWQvc2VjdXJpdHkvdjEvb2Jlcm9uEmAKKnVybjp0cmluc2ljOndhbGxldHM6TmFBUVpvN3FDWWdrMk45TExta1RUQiIydXJuOnRyaW5zaWM6ZWNvc3lzdGVtczp2aWdvcm91cy1rZWxsZXItRllSR2ZkRVdaWHQaMJK76tJBHrph2GiNhsBiS6oH7YbkvoF7ESrWLjKxiPy8rZFyxrBO8ZyHqBwxdPYA1CIA",
-				"query": 'SELECT * FROM c'
+				"auth_token": "CiVodHRwczovL3RyaW5zaWMuaWQvc2VjdXJpdHkvdjEvb2Jlcm9uEkwKKnVybjp0cmluc2ljOndhbGxldHM6VW45TGpFNUVjN0ZCUFRvNzFURFpVQSIedXJuOnRyaW5zaWM6ZWNvc3lzdGVtczpkZWZhdWx0GjCAevCcnadUa3HuncGb_YN6BFwU-jgBzgZZHR4hABloaRWyEVo2T1uqFz0lOTWSrf0iAA",
+				"email": 'dnaicker@gmail.com',
+				"documentJson": '{"@context":["https://www.w3.org/2018/credentials/v1","https://w3id.org/bbs/v1","https://schema.trinsic.cloud/default/demo-prep/context"],"type":["VerifiableCredential","DemoPrep"],"credentialSchema":[{"id":"https://schema.trinsic.cloud/default/demo-prep","type":"JsonSchemaValidator2018"}],"credentialSubject":{"Name":"asdasd","id":"urn:uuid:e11fd38ab1c14109ad08bac621d6ced3"},"id":"urn:uuid:0184a37ef38e41158a7f57bc02bb5f16","issuanceDate":"2022-11-22T09:48:30.4929859Z","credentialStatus":{"id":"urn:revocation-registry:default:5k56kTgYanmmgtScX4zuKa#0","type":"RevocationList2020Status","revocationListIndex":"0","revocationListCredential":"urn:revocation-registry:default:5k56kTgYanmmgtScX4zuKa"},"issuer":"did:key:z5TcCRi7gjZ2SNBkvPwUbg8rZYKWpe2WGJkhYoQ4qWeR2S47hh11yX7rApWNMZfSzFbj1ziKqcyfvkL8i3VRcVfJS6BL9Qc3BpWbCdna1WfuWR63bcYNdoWWu1eFb3b2X6jtftaN58vYxRHeBe7qejmzCRaMNZjWahZRiX5Ch4R9fgxrUm13se4GGFCxAFJwdewiQtKQa","proof":{"type":"BbsBlsSignature2020","created":"2022-11-22T09:48:30Z","proofPurpose":"assertionMethod","proofValue":"tLPkSfSf/SBZnflGqq4W5u1vSahTyDPxKnQGwjQMGMw69ghp+8mKIk45QF6A3zmvNrQtGXBKw+jh6TSbThu3AxaTcMKJZZIARUkf2Xi+avVuFbRDT6u7/R3za5rLC/nEm2UkwnTd1keu0QFQ1SUy8A==","verificationMethod":"did:key:z5TcCRi7gjZ2SNBkvPwUbg8rZYKWpe2WGJkhYoQ4qWeR2S47hh11yX7rApWNMZfSzFbj1ziKqcyfvkL8i3VRcVfJS6BL9Qc3BpWbCdna1WfuWR63bcYNdoWWu1eFb3b2X6jtftaN58vYxRHeBe7qejmzCRaMNZjWahZRiX5Ch4R9fgxrUm13se4GGFCxAFJwdewiQtKQa#zUC7KM8zJLJMXbKKDdkXYu8J6Uskvi9eUE8jbjsTNexswMNm8nj1BvQLnGbYNrxMmkUEDfZ3vSnMbxPzrRu4X6ZVE8GKWk1F4EBcdzpo8XEZvZyUuGFQ8x71E12ocNNkTNg59W6"}}'
 			},
-			url: "/searchTemplate",
+			url: "/emailCredential",
 		});
 
 		expect(res.statusCode).to.equal(200);
-		expect(res.result).to.equal(`searchTemplate`);
 	});
 
 

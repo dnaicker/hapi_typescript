@@ -14,7 +14,8 @@ import {
 	EcosystemInfoRequest,
 	LoginRequest,
 	SearchCredentialTemplatesRequest,
-	GetCredentialTemplateRequest
+	GetCredentialTemplateRequest,
+	SendRequest
 } from "@trinsic/trinsic";
 import { Request, ResponseToolkit, ResponseObject, ServerRoute } from '@hapi/hapi'
 import { v4 as uuid } from "uuid";
@@ -100,14 +101,15 @@ async function createCredential(request: Request, responseToolkit: ResponseToolk
 	trinsic.options.authToken = (request.payload as any).auth_token;
 
 	// todo: validate template using joi
+	console.log('issueResponse')
 
 	// send request to Trinsic
-	const issueResponse = await IssueFromTemplateRequest.fromPartial({
+	const issueResponse = await trinsic.credential().issueFromTemplate(IssueFromTemplateRequest.fromPartial({
 		templateId: (request.payload as any).template_id,
-		valuesJson: JSON.stringify((request.payload as any).credential_values),
-	});
+		valuesJson: (request.payload as any).credential_values,
+	}));
 
-	console.log('issueResponse ', issueResponse)
+	console.log(issueResponse)
 
 	const response = responseToolkit.response(issueResponse);
 	return response;
@@ -213,6 +215,56 @@ async function getCredentialTemplate(request: Request, responseToolkit: Response
 	return response;
 }
 
+// -------------
+// search wallet
+// request: authKey, query, continuation_token
+// response: 
+async function searchWallet(request: Request, responseToolkit: ResponseToolkit): Promise<ResponseObject> {
+	const trinsic = new TrinsicService();
+
+	trinsic.setAuthToken(process.env.AUTHTOKEN || "");
+
+	console.log((request.payload as any)?.query != "" ? (request.payload as any)?.query : "");	
+
+	console.log(request.payload);
+
+	trinsic.options.authToken = (request.payload as any).auth_token;
+
+	//todo: use search query (request.payload as any).query
+	//the token is sent through again from previous query response
+	
+	const result = await trinsic.wallet().searchWallet();
+	
+	console.log(result);
+
+	const response = responseToolkit.response(result);
+	return response;
+}
+
+// -------------
+// email credential
+// request: authKey
+// response: 
+async function emailCredential(request: Request, responseToolkit: ResponseToolkit): Promise<ResponseObject> {
+	const trinsic = new TrinsicService();
+
+	trinsic.setAuthToken(process.env.AUTHTOKEN || "");
+
+	console.log(request.payload);
+
+	trinsic.options.authToken = (request.payload as any).auth_token;
+
+	const result = await trinsic.credential().send(SendRequest.fromPartial({
+		email: (request.payload as any).email,
+		documentJson: JSON.stringify((request.payload as any).documentJson),
+	}));
+	
+	console.log(result);
+
+	const response = responseToolkit.response(result);
+	return response;
+}
+
 //-------------------
 export const trinsicVerifiableCredentials: ServerRoute[] = [
 	{
@@ -250,6 +302,16 @@ export const trinsicVerifiableCredentials: ServerRoute[] = [
 		path: '/getCredentialTemplate',
 		handler: getCredentialTemplate
 	},
+	{
+		method: 'POST',
+		path: '/searchWallet',
+		handler: searchWallet
+	},
+	{
+		method: 'POST',
+		path: '/emailCredential',
+		handler: emailCredential
+	}
 ]
 
 
