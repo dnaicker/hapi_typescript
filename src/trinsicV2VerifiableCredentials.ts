@@ -104,14 +104,21 @@ async function createCredential(request: Request, responseToolkit: ResponseToolk
 	console.log('issueResponse')
 
 	// send request to Trinsic
-	const issueResponse = await trinsic.credential().issueFromTemplate(IssueFromTemplateRequest.fromPartial({
+	const credential = await trinsic.credential().issueFromTemplate(IssueFromTemplateRequest.fromPartial({
 		templateId: (request.payload as any).template_id,
 		valuesJson: (request.payload as any).credential_values,
 	}));
 
-	console.log(issueResponse)
+	console.log(credential)
 
-	const response = responseToolkit.response(issueResponse);
+	// store against email address
+	const credential_id = await trinsic.wallet().insertItem(
+		InsertItemRequest.fromPartial({
+			itemJson: credential.documentJson,
+		})
+	);
+
+	const response = responseToolkit.response(credential_id);
 	return response;
 }
 
