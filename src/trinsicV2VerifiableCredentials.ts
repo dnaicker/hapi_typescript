@@ -66,7 +66,7 @@ function createTemplateFields(credential_template_fields: any): any {
 // request: auth_token, JSON ["data": {"credential_template_title":"", "credential_template_fields":[{"name":"", "type":"", "description": ""}]}
 // JSON field data types: bool, datetime, number, string
 async function createCredentialTemplate(request: Request, responseToolkit: ResponseToolkit): Promise<ResponseObject> {
-	
+
 	console.log(request.payload);
 
 	// set user auth token
@@ -94,18 +94,18 @@ async function createCredentialTemplate(request: Request, responseToolkit: Respo
 // request: template_id, credential_values
 // wallet holder
 async function createCredential(request: Request, responseToolkit: ResponseToolkit): Promise<ResponseObject> {
+	console.log("createCredential");
+	console.log(request.payload);
 	// set account token
 	trinsic.options.authToken = (request.payload as any).auth_token;
 
 	// todo: validate template using joi
 
 	// send request to Trinsic
-	const issueResponse = await trinsic.credential().issueFromTemplate(
-		IssueFromTemplateRequest.fromPartial({
-			templateId: (request.payload as any).template_id,
-			valuesJson: JSON.stringify((request.payload as any).credential_values),
-		})
-	);
+	const issueResponse = await IssueFromTemplateRequest.fromPartial({
+		templateId: (request.payload as any).template_id,
+		valuesJson: JSON.stringify((request.payload as any).credential_values),
+	});
 
 	console.log('issueResponse ', issueResponse)
 
@@ -145,13 +145,13 @@ async function createCredentialProof(request: Request, responseToolkit: Response
 	console.log((request.payload as any).credential_id)
 
 	const proofResponse = await trinsic.credential().createProof(
-			CreateProofRequest.fromPartial({
-					itemId: (request.payload as any).credential_id,
-			})
+		CreateProofRequest.fromPartial({
+			itemId: (request.payload as any).credential_id,
+		})
 	);
 
 	console.log(proofResponse);
-	
+
 	const response = responseToolkit.response(proofResponse);
 	return response;
 }
@@ -163,10 +163,10 @@ async function createCredentialProof(request: Request, responseToolkit: Response
 // response: credentialId
 async function verifyCredentialProof(request: Request, responseToolkit: ResponseToolkit): Promise<ResponseObject> {
 	trinsic.options.authToken = (request.payload as any).auth_token;
-	
+
 	const verifyResponse = await trinsic.credential().verifyProof(
 		VerifyProofRequest.fromPartial({
-				proofDocumentJson: (request.payload as any).credential_proof,
+			proofDocumentJson: (request.payload as any).credential_proof,
 		})
 	);
 
@@ -184,8 +184,8 @@ async function verifyCredentialProof(request: Request, responseToolkit: Response
 async function searchTemplate(request: Request, responseToolkit: ResponseToolkit): Promise<ResponseObject> {
 	console.log(request.payload);
 	trinsic.options.authToken = (request.payload as any).auth_token;
-	
-	const searchResponse = await trinsic.template().search(SearchCredentialTemplatesRequest.fromPartial({query: (request.payload as any).query}));
+
+	const searchResponse = await trinsic.template().search(SearchCredentialTemplatesRequest.fromPartial({ query: (request.payload as any).query }));
 
 	console.log(searchResponse);
 
@@ -203,10 +203,10 @@ async function getCredentialTemplate(request: Request, responseToolkit: Response
 	trinsic.setAuthToken(process.env.AUTHTOKEN || "");
 
 	console.log(request.payload);
-	
+
 	trinsic.options.authToken = (request.payload as any).auth_token;
-	
-	const getTemplateData = await trinsic.template().get(GetCredentialTemplateRequest.fromPartial({id: (request.payload as any).id}));
+
+	const getTemplateData = await trinsic.template().get(GetCredentialTemplateRequest.fromPartial({ id: (request.payload as any).id }));
 	console.log(getTemplateData);
 
 	const response = responseToolkit.response(getTemplateData);

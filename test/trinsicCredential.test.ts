@@ -52,11 +52,11 @@ describe('test suite', async () => {
 	// 				"test_name_3": "test value 3"
 	// 			},
 	// 		},
-	// 		url: "/insertCredentialTemplateValues",
+	// 		url: "/createCredential",
 	// 	});
 
 	// 	expect(res.statusCode).to.equal(200);
-	// 	expect(res.result).to.equal(`insertCredentialTemplateValues`);
+	// 	expect(res.result).to.equal(`createCredential`);
 	// });
 
 	// //-------------------
