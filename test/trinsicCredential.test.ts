@@ -129,7 +129,7 @@ describe('test suite', async () => {
 			method: "POST",
 			payload: {
 				"auth_token": "CiVodHRwczovL3RyaW5zaWMuaWQvc2VjdXJpdHkvdjEvb2Jlcm9uEkwKKnVybjp0cmluc2ljOndhbGxldHM6VW45TGpFNUVjN0ZCUFRvNzFURFpVQSIedXJuOnRyaW5zaWM6ZWNvc3lzdGVtczpkZWZhdWx0GjCAevCcnadUa3HuncGb_YN6BFwU-jgBzgZZHR4hABloaRWyEVo2T1uqFz0lOTWSrf0iAA",
-				"query": 'SELECT * FROM c'
+				"query": 'SELECT c.id, c.type FROM c'
 			},
 			url: "/searchWallet",
 		});

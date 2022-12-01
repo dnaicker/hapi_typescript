@@ -15,7 +15,8 @@ import {
 	LoginRequest,
 	SearchCredentialTemplatesRequest,
 	GetCredentialTemplateRequest,
-	SendRequest
+	SendRequest,
+	SearchRequest
 } from "@trinsic/trinsic";
 import { Request, ResponseToolkit, ResponseObject, ServerRoute } from '@hapi/hapi'
 import { v4 as uuid } from "uuid";
@@ -149,7 +150,12 @@ async function storeCredential(request: Request, responseToolkit: ResponseToolki
 // request: auth_token (String), credential_id (String)
 // response: message to say complete
 async function createCredentialProof(request: Request, responseToolkit: ResponseToolkit): Promise<ResponseObject> {
+	const trinsic = new TrinsicService();
+
+	trinsic.setAuthToken(process.env.AUTHTOKEN || "");
+	
 	trinsic.options.authToken = (request.payload as any).auth_token;
+	
 	console.log((request.payload as any).auth_token)
 	console.log((request.payload as any).credential_id)
 
@@ -240,7 +246,7 @@ async function searchWallet(request: Request, responseToolkit: ResponseToolkit):
 	//todo: use search query (request.payload as any).query
 	//the token is sent through again from previous query response
 	
-	const result = await trinsic.wallet().searchWallet();
+	const result = await trinsic.wallet().searchWallet(SearchRequest.fromPartial({ query: (request.payload as any).query, continuationToken: ((request.payload as any)?.continuation_token ?? "") }));
 	
 	console.log(result);
 
