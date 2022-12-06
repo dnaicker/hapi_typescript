@@ -34,6 +34,7 @@ async function createOrLoginAccount(request: Request, responseToolkit: ResponseT
 	const loginResponse = await trinsic.account().login(
     LoginRequest.fromPartial({
         email: `${request.params.email}`,
+				ecosystemId: "urn:trinsic:ecosystems:CSIR",
     })
 	);
 

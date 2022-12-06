@@ -150,10 +150,6 @@ async function storeCredential(request: Request, responseToolkit: ResponseToolki
 // request: auth_token (String), credential_id (String)
 // response: message to say complete
 async function createCredentialProof(request: Request, responseToolkit: ResponseToolkit): Promise<ResponseObject> {
-	const trinsic = new TrinsicService();
-
-	trinsic.setAuthToken(process.env.AUTHTOKEN || "");
-	
 	trinsic.options.authToken = (request.payload as any).auth_token;
 	
 	console.log((request.payload as any).auth_token)
@@ -213,12 +209,6 @@ async function searchTemplate(request: Request, responseToolkit: ResponseToolkit
 // request: authKey, query
 // response: credentialId
 async function getCredentialTemplate(request: Request, responseToolkit: ResponseToolkit): Promise<ResponseObject> {
-	const trinsic = new TrinsicService();
-
-	trinsic.setAuthToken(process.env.AUTHTOKEN || "");
-
-	console.log(request.payload);
-
 	trinsic.options.authToken = (request.payload as any).auth_token;
 
 	const getTemplateData = await trinsic.template().get(GetCredentialTemplateRequest.fromPartial({ id: (request.payload as any).id }));
@@ -233,10 +223,6 @@ async function getCredentialTemplate(request: Request, responseToolkit: Response
 // request: authKey, query, continuation_token
 // response: 
 async function searchWallet(request: Request, responseToolkit: ResponseToolkit): Promise<ResponseObject> {
-	const trinsic = new TrinsicService();
-
-	trinsic.setAuthToken(process.env.AUTHTOKEN || "");
-
 	console.log((request.payload as any)?.query != "" ? (request.payload as any)?.query : "");	
 
 	console.log(request.payload);
@@ -259,10 +245,6 @@ async function searchWallet(request: Request, responseToolkit: ResponseToolkit):
 // request: authKey
 // response: 
 async function emailCredential(request: Request, responseToolkit: ResponseToolkit): Promise<ResponseObject> {
-	const trinsic = new TrinsicService();
-
-	trinsic.setAuthToken(process.env.AUTHTOKEN || "");
-
 	console.log(request.payload);
 
 	trinsic.options.authToken = (request.payload as any).auth_token;
