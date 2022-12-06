@@ -45,20 +45,23 @@ function getFieldType(type: String): FieldType {
 // -------------
 // create array of fields with FieldType datatypes
 function createTemplateFields(credential_template_fields: any): any {
-	let fields: any = [];
+	let obj: any = {};
 
 	// create a dynamic templatefield for Trinsic
-	credential_template_fields.forEach((field: any) => {
-		// create new field object	
-		let obj: any = {};
+	for(let i = 0; i < credential_template_fields.length; i++) {
+		const field = credential_template_fields[i];
+		const field_type = getFieldType(field.type);
 
 		obj[field.name] = TemplateField.fromPartial({
-			type: getFieldType(field.type),
-			description: field.description
+			type: field_type,
+			description: field.description,
+			optional: field.optional === 'true' ? true : false
 		});
+	}
 
-		fields.push(obj);
-	});
+	console.log(obj);
+
+	return obj;
 }
 
 // -------------
@@ -69,22 +72,20 @@ function createTemplateFields(credential_template_fields: any): any {
 // JSON field data types: bool, datetime, number, string
 async function createCredentialTemplate(request: Request, responseToolkit: ResponseToolkit): Promise<ResponseObject> {
 
-	console.log(request.payload);
-
 	// set user auth token
 	trinsic.options.authToken = (request.payload as any).auth_token;
+
+	const fields = createTemplateFields(JSON.parse((request.payload as any).credential_template_fields));
 
 	// create credential temlpate from JSON data from params
 	let credentialTemplate = CreateCredentialTemplateRequest.fromPartial({
 		name: `${(request.payload as any).credential_template_title}-${uuid()}`,
-		fields: createTemplateFields(JSON.parse((request.payload as any).credential_template_fields)),
+		fields: fields,
 	});
 
 	// send request to Trinsic
 	const result = await trinsic.template().create(credentialTemplate);
 	const template = result.data;
-
-	console.log(template);
 
 	// REST response
 	const response = responseToolkit.response(template);

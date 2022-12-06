@@ -22,9 +22,6 @@ import {Request, ResponseToolkit, ResponseObject, ServerRoute} from '@hapi/hapi'
 // response: challenge (bytes), profile (Account Profile: auth_data, auth_token, profile_type, protection)
 async function createOrLoginAccount(request: Request, responseToolkit: ResponseToolkit): Promise<ResponseObject> {
 	const trinsic = new TrinsicService();
-	
-	// set orginisation auth token
-	trinsic.setAuthToken(process.env.AUTHTOKEN || "");
 
 	// retrieve email
 	// todo: validate that email field was sent using joi
