@@ -93,7 +93,7 @@ async function createCredentialTemplate(request: Request, responseToolkit: Respo
 }
 
 // -------------
-// insert credential values into credential template 
+// create credential without email
 // request: template_id, credential_values
 // wallet holder
 async function createCredential(request: Request, responseToolkit: ResponseToolkit): Promise<ResponseObject> {
@@ -113,12 +113,44 @@ async function createCredential(request: Request, responseToolkit: ResponseToolk
 
 	console.log(credential)
 
+	const response = responseToolkit.response(credential);
+	return response;
+}
+
+// -------------
+// insert credential values into credential template 
+// request: template_id, credential_values
+// wallet holder
+async function createCredentialWithEmail(request: Request, responseToolkit: ResponseToolkit): Promise<ResponseObject> {
+	console.log("createCredential");
+	console.log(request.payload);
+	// set account token
+	trinsic.options.authToken = (request.payload as any).auth_token;
+
+	// todo: validate template using joi
+	console.log('issueResponse')
+
+	// send request to Trinsic
+	const credential = await trinsic.credential().issueFromTemplate(IssueFromTemplateRequest.fromPartial({
+		templateId: (request.payload as any).template_id,
+		valuesJson: (request.payload as any).credential_values,
+	}));
+
+	console.log(credential)
+
 	// store against email address
-	const credential_id = await trinsic.wallet().insertItem(
-		InsertItemRequest.fromPartial({
-			itemJson: credential.documentJson,
-		})
-	);
+	const credential_id = await trinsic.credential().send(SendRequest.fromPartial({
+		email: (request.payload as any).account_email,
+		documentJson: credential.documentJson,
+	}));
+
+	// const credential_id = await trinsic.wallet().insertItem(
+	// 	InsertItemRequest.fromPartial({
+	// 		itemJson: credential.documentJson,
+	// 	})
+	// );
+
+	console.log(credential_id)
 
 	const response = responseToolkit.response(credential_id);
 	return response;
@@ -307,6 +339,11 @@ export const trinsicVerifiableCredentials: ServerRoute[] = [
 		method: 'POST',
 		path: '/emailCredential',
 		handler: emailCredential
+	},
+	{
+		method: 'POST',
+		path: '/createCredentialWithEmail',
+		handler: createCredentialWithEmail
 	}
 ]
 
