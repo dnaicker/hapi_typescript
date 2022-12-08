@@ -159,7 +159,7 @@ async function createCredentialWithEmail(request: Request, responseToolkit: Resp
 	
 		console.log(credential_id)
 	
-		const response = responseToolkit.response(credential_id);
+		const response = responseToolkit.response('Success');
 		return response;
 	} catch(error) {
 		console.log(error);
