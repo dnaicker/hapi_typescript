@@ -123,42 +123,49 @@ async function createCredential(request: Request, responseToolkit: ResponseToolk
 // request: template_id, credential_values
 // wallet holder
 async function createCredentialWithEmail(request: Request, responseToolkit: ResponseToolkit): Promise<ResponseObject> {
-	console.log("createCredentialWithEmail");
-	console.log(request.payload);
-	console.log((request.payload as any).account_email);
-	console.log((request.payload as any).credential_values);
-	console.log((request.payload as any).template_id);
-	// set account token
-	trinsic.options.authToken = (request.payload as any).auth_token;
-
-	// todo: validate template using joi
-	console.log('createCredentialWithEmail Response')
-
-	// send request to Trinsic
-	const credential = await trinsic.credential().issueFromTemplate(IssueFromTemplateRequest.fromPartial({
-		templateId: (request.payload as any).template_id,
-		valuesJson: (request.payload as any).credential_values,
-	}));
-
-	console.log(credential)
-
-	// store against email address
+	try {
+		console.log("createCredentialWithEmail");
+		console.log(request.payload);
+		console.log((request.payload as any).account_email);
+		console.log((request.payload as any).credential_values);
+		console.log((request.payload as any).template_id);
 	
-	const credential_id = await trinsic.credential().send(SendRequest.fromPartial({
-		email: (request.payload as any).account_email,
-		documentJson: credential.documentJson,
-	}));
-
-	// const credential_id = await trinsic.wallet().insertItem(
-	// 	InsertItemRequest.fromPartial({
-	// 		itemJson: credential.documentJson,
-	// 	})
-	// );
-
-	console.log(credential_id)
-
-	const response = responseToolkit.response(credential_id);
-	return response;
+		// set account token
+		trinsic.options.authToken = (request.payload as any).auth_token;
+	
+		// todo: validate template using joi
+		console.log('createCredentialWithEmail Response')
+	
+		// send request to Trinsic
+		const credential = await trinsic.credential().issueFromTemplate(IssueFromTemplateRequest.fromPartial({
+			templateId: (request.payload as any).template_id,
+			valuesJson: (request.payload as any).credential_values,
+		}));
+	
+		console.log(credential)
+	
+		// store against email address
+		
+		const credential_id = await trinsic.credential().send(SendRequest.fromPartial({
+			email: (request.payload as any).account_email,
+			documentJson: credential.documentJson,
+		}));
+		
+		// const credential_id = await trinsic.wallet().insertItem(
+		// 	InsertItemRequest.fromPartial({
+		// 		itemJson: credential.documentJson,
+		// 	})
+		// );
+	
+		console.log(credential_id)
+	
+		const response = responseToolkit.response(credential_id);
+		return response;
+	} catch(error) {
+		console.log(error);
+		const response = responseToolkit.response('error');
+		return response;
+	}
 }
 
 // -------------
