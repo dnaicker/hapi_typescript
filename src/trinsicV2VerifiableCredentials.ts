@@ -16,7 +16,8 @@ import {
 	SearchCredentialTemplatesRequest,
 	GetCredentialTemplateRequest,
 	SendRequest,
-	SearchRequest
+	SearchRequest,
+	CredentialService
 } from "@trinsic/trinsic";
 import { Request, ResponseToolkit, ResponseObject, ServerRoute } from '@hapi/hapi'
 import { v4 as uuid } from "uuid";
@@ -122,13 +123,16 @@ async function createCredential(request: Request, responseToolkit: ResponseToolk
 // request: template_id, credential_values
 // wallet holder
 async function createCredentialWithEmail(request: Request, responseToolkit: ResponseToolkit): Promise<ResponseObject> {
-	console.log("createCredential");
+	console.log("createCredentialWithEmail");
 	console.log(request.payload);
+	console.log((request.payload as any).account_email);
+	console.log((request.payload as any).credential_values);
+	console.log((request.payload as any).template_id);
 	// set account token
 	trinsic.options.authToken = (request.payload as any).auth_token;
 
 	// todo: validate template using joi
-	console.log('issueResponse')
+	console.log('createCredentialWithEmail Response')
 
 	// send request to Trinsic
 	const credential = await trinsic.credential().issueFromTemplate(IssueFromTemplateRequest.fromPartial({
@@ -139,6 +143,7 @@ async function createCredentialWithEmail(request: Request, responseToolkit: Resp
 	console.log(credential)
 
 	// store against email address
+	
 	const credential_id = await trinsic.credential().send(SendRequest.fromPartial({
 		email: (request.payload as any).account_email,
 		documentJson: credential.documentJson,
@@ -278,13 +283,14 @@ async function searchWallet(request: Request, responseToolkit: ResponseToolkit):
 // request: authKey
 // response: 
 async function emailCredential(request: Request, responseToolkit: ResponseToolkit): Promise<ResponseObject> {
-	console.log(request.payload);
+	console.log('emailCredential');
 
 	trinsic.options.authToken = (request.payload as any).auth_token;
 
+	CredentialService.
 	const result = await trinsic.credential().send(SendRequest.fromPartial({
-		email: (request.payload as any).email,
-		documentJson: JSON.stringify((request.payload as any).documentJson),
+		email: (request.payload as any).account_email,
+		documentJson: (request.payload as any).credential,
 	}));
 	
 	console.log(result);
