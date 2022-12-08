@@ -163,6 +163,7 @@ async function createCredentialWithEmail(request: Request, responseToolkit: Resp
 		return response;
 	} catch(error) {
 		console.log(error);
+		console.log(typeof error);
 		const response = responseToolkit.response('error');
 		return response;
 	}
