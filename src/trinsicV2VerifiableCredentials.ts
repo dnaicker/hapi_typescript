@@ -287,7 +287,6 @@ async function emailCredential(request: Request, responseToolkit: ResponseToolki
 
 	trinsic.options.authToken = (request.payload as any).auth_token;
 
-	CredentialService.
 	const result = await trinsic.credential().send(SendRequest.fromPartial({
 		email: (request.payload as any).account_email,
 		documentJson: (request.payload as any).credential,
