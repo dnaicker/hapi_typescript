@@ -17,7 +17,8 @@ import {
 	GetCredentialTemplateRequest,
 	SendRequest,
 	SearchRequest,
-	CredentialService
+	CredentialService,
+	CheckStatusRequest
 } from "@trinsic/trinsic";
 import { Request, ResponseToolkit, ResponseObject, ServerRoute } from '@hapi/hapi'
 import { v4 as uuid } from "uuid";
@@ -306,6 +307,25 @@ async function emailCredential(request: Request, responseToolkit: ResponseToolki
 	return response;
 }
 
+// -------------
+// check revocation status
+// request: authKey, credential_status_id
+// response: 
+async function checkRevocationStatus(request: Request, responseToolkit: ResponseToolkit): Promise<ResponseObject> {
+	console.log('emailCredential');
+
+	trinsic.options.authToken = (request.payload as any).auth_token;
+
+	const result = await trinsic.credential().checkStatus(CheckStatusRequest.fromPartial({
+		credentialStatusId: (request.payload as any).credential_status_id
+	}));
+	
+	console.log(result);
+
+	const response = responseToolkit.response(result);
+	return response;
+}
+
 //-------------------
 export const trinsicVerifiableCredentials: ServerRoute[] = [
 	{
@@ -357,6 +377,11 @@ export const trinsicVerifiableCredentials: ServerRoute[] = [
 		method: 'POST',
 		path: '/createCredentialWithEmail',
 		handler: createCredentialWithEmail
+	},
+	{
+		method: 'POST',
+		path: '/checkRevocationStatus',
+		handler: checkRevocationStatus
 	}
 ]
 
