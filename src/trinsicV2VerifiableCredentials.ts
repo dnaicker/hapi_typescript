@@ -146,6 +146,9 @@ async function createCredentialWithEmail(request: Request, responseToolkit: Resp
 		console.log(credential)
 	
 		// store against email address
+
+		console.log('store against email address')
+
 		
 		const credential_id = await trinsic.credential().send(SendRequest.fromPartial({
 			email: (request.payload as any).account_email,
@@ -163,6 +166,7 @@ async function createCredentialWithEmail(request: Request, responseToolkit: Resp
 		const response = responseToolkit.response('Success');
 		return response;
 	} catch(error) {
+
 		console.log(error);
 		console.log(typeof error);
 		const response = responseToolkit.response('error');
@@ -212,6 +216,65 @@ async function createCredentialProof(request: Request, responseToolkit: Response
 
 	const response = responseToolkit.response(proofResponse);
 	return response;
+}
+
+// -------------
+// create selective credential proof
+// issuer
+// request: auth_token (String), credential_id (String)
+// response: message to say complete
+async function createCredentialSelectiveProof(request: Request, responseToolkit: ResponseToolkit): Promise<ResponseObject> {
+	try {
+		let credentialSubject: any = {};
+		trinsic.options.authToken = (request.payload as any).auth_token;
+	
+		console.log((request.payload as any).auth_token)
+		console.log((request.payload as any).credential_id)
+		console.log((request.payload as any).credential_selected_fields)
+
+		// typescript loop through array
+		const selectedFields = JSON.parse((request.payload as any).credential_selected_fields);
+		
+		// add property to object
+		credentialSubject["@explicit"] = true;
+		
+		for (var index of selectedFields) { 
+			credentialSubject[index] = {};
+		} 
+
+
+		const jsonLD:JSON = <JSON><unknown>{
+			"@context": [
+				"https://www.w3.org/2018/credentials/v1", // hardcode this value
+				{
+					"@vocab": "https://trinsic.cloud/CSIR/" // or is it urn:trinsic:ecosystems:CSIR?
+				}
+			],
+			"type": [
+				"VerifiableCredential"
+			],
+			"credentialSubject": credentialSubject
+		}
+		console.log(jsonLD);
+	
+		const proofResponse = await trinsic.credential().createProof(
+			CreateProofRequest.fromPartial({
+				itemId: (request.payload as any).credential_id,
+				revealDocumentJson: JSON.stringify(jsonLD),
+			})
+		);
+	
+		console.log(proofResponse);
+	
+		const response = responseToolkit.response(proofResponse);
+		return response;
+	}
+	catch(error) {
+		console.log(error);
+		console.log(typeof error);
+		const response = responseToolkit.response('error');
+		return response;
+	}
 }
 
 // -------------
@@ -337,6 +400,11 @@ export const trinsicVerifiableCredentials: ServerRoute[] = [
 		method: 'POST',
 		path: '/createCredential',
 		handler: createCredential
+	},
+	{
+		method: 'POST',
+		path: '/createCredentialSelectiveProof',
+		handler: createCredentialSelectiveProof
 	},
 	{
 		method: 'POST',
