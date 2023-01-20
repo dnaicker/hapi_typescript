@@ -449,7 +449,8 @@ async function checkRevocationStatus(
   request: Request,
   responseToolkit: ResponseToolkit
 ): Promise<ResponseObject> {
-  console.log("emailCredential");
+  console.log("checkRevocationStatus");
+  console.log((request.payload as any).credential_status_id);
 
   trinsic.options.authToken = (request.payload as any).auth_token;
 
