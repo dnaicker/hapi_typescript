@@ -449,6 +449,35 @@ async function searchWallet(
 }
 
 // -------------
+// get JSON-LD
+// request: credentialId
+// response: JSON-LD
+async function getJSONLD(
+  request: Request,
+  responseToolkit: ResponseToolkit
+): Promise<ResponseObject> {
+
+  trinsic.options.authToken = process.env.AUTHTOKEN || ""; // use ecosystem auth key
+
+  // get credential id
+  const credential_id = request.params.credentialId;
+
+  const result = await trinsic
+    .wallet()
+    .searchWallet(
+      SearchRequest.fromPartial({
+        query: `SELECT * FROM c WHERE c.id = '${credential_id}}'`,
+        continuationToken: "",
+      })
+    );
+
+  console.log(result);
+
+  const response = responseToolkit.response(result);
+  return response;
+}
+
+// -------------
 // email credential
 // request: authKey
 // response:
@@ -595,6 +624,11 @@ export const trinsicVerifiableCredentials: ServerRoute[] = [
     path: "/qrCodeShareCredential",
     handler: qrCodeShareCredential,
   },
+  {
+    method: "GET",
+    path: "/getJSONLD/{credentialId}",
+    handler: getJSONLD,
+  }
 ];
 
 // todo: mask fields to show during verification process
