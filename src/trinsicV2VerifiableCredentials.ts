@@ -98,6 +98,8 @@ async function createCredentialTemplate(
   const result = await trinsic.template().create(credentialTemplate);
   const template = result.data;
 
+  console.log(template);
+
   // REST response
   const response = responseToolkit.response(template);
   return response;
@@ -234,6 +236,36 @@ async function createCredentialProof(
   const proofResponse = await trinsic.credential().createProof(
     CreateProofRequest.fromPartial({
       itemId: (request.payload as any).credential_id,
+    })
+  );
+
+  console.log(proofResponse);
+
+  const response = responseToolkit.response(proofResponse);
+  return response;
+}
+
+// -------------
+// create credential proof
+// issuer
+// request: auth_token (String), credential_id (String)
+// response: message to say complete
+async function createSelectiveCredentialProof(
+  request: Request,
+  responseToolkit: ResponseToolkit
+): Promise<ResponseObject> {
+  trinsic.options.authToken = (request.payload as any).auth_token;
+
+  console.log((request.payload as any).auth_token);
+  console.log((request.payload as any).credential_id);
+  console.log((request.payload as any).reveal_template);
+
+  const proofResponse = await trinsic.credential().createProof(
+    CreateProofRequest.fromPartial({
+      itemId: (request.payload as any).credential_id,
+      revealTemplate: {
+        templateAttributes: (request.payload as any).reveal_template,
+      }
     })
   );
 
@@ -492,6 +524,11 @@ export const trinsicVerifiableCredentials: ServerRoute[] = [
     method: "POST",
     path: "/createCredentialProof",
     handler: createCredentialProof,
+  },
+  {
+    method: "POST",
+    path: "/createSelectiveCredentialProof",
+    handler: createSelectiveCredentialProof,
   },
   {
     method: "PUT",
