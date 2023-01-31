@@ -308,7 +308,7 @@ async function createCredentialSelectiveProofAndVerify(
       "@context": [
         "https://www.w3.org/2018/credentials/v1", // hardcode this value
         {
-          "@vocab": "https://trinsic.cloud/CSIR/", // or is it urn:trinsic:ecosystems:CSIR?
+          "@vocab": "https://trinsic.cloud/CSIR/",  // hardcode this value
         },
       ],
       type: ["VerifiableCredential"],
@@ -498,6 +498,31 @@ async function checkRevocationStatus(
   return response;
 }
 
+
+//-------------------
+// Share Credential by generating QR Code returns JSON-LD
+// request: 
+// response: 
+async function qrCodeShareCredential(request: Request, responseToolkit: ResponseToolkit): Promise<ResponseObject> {
+  const trinsic = new TrinsicService();
+
+  // retrieve email
+  // todo: validate that email field was sent using joi
+  // todo: verify no escape characters in request
+
+  // response otp (sent to email) and challenge
+  const loginResponse = await trinsic.account().login(
+    LoginRequest.fromPartial({
+        email: `${request.params.email}`,
+        ecosystemId: "urn:trinsic:ecosystems:CSIR",
+    })
+  );
+
+  // if not account detials sent back, show a ui screen that asks for input for one time pin
+  const response = responseToolkit.response(loginResponse);
+  return response;
+}
+
 //-------------------
 export const trinsicVerifiableCredentials: ServerRoute[] = [
   {
@@ -564,6 +589,11 @@ export const trinsicVerifiableCredentials: ServerRoute[] = [
     method: "POST",
     path: "/checkRevocationStatus",
     handler: checkRevocationStatus,
+  },
+  {
+    method: "GET",
+    path: "/qrCodeShareCredential",
+    handler: qrCodeShareCredential,
   },
 ];
 

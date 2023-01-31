@@ -59,15 +59,12 @@ async function registerAccount(request: Request, responseToolkit: ResponseToolki
 		console.log((request.payload as any).challenge);
 		console.log((request.payload as any).otp);
 	
-	
 		// todo: validate that one_time_pin and challenge fields was sent thorugh using joi
 		// todo: verify no escape characters in request
 		const authToken = await trinsic.account()
 			.loginConfirm(
 				new Uint8Array((request.payload as any).challenge),
 				(request.payload as any).otp);
-		
-		console.log('auth token',authToken);
 		
 		const response = responseToolkit.response(authToken);
 		return response;
@@ -107,17 +104,14 @@ async function registerAccountChallengeString(request: Request, responseToolkit:
 				new Uint8Array(JSON.parse((request.payload as any).challenge)),
 				(request.payload as any).otp);
 		
-		console.log('auth token',authToken);
-		
 		const response = responseToolkit.response(authToken);
 		return response;
 	} catch(error) {
-		console.log(error);
+				console.log(error);
     console.log(typeof error);
     const response = responseToolkit.response("error");
     return response;
 	}
-	
 }
 
 //-------------------
