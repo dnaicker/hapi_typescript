@@ -466,6 +466,39 @@ async function getJSONLD(
     .wallet()
     .searchWallet(
       SearchRequest.fromPartial({
+        query: `SELECT * FROM c WHERE c.id = ${credential_id}}`,
+        continuationToken: "",
+      })
+    );
+
+  console.log(result);
+
+  const response = responseToolkit.response(result);
+  return response;
+}
+
+// -------------
+// get JSON-LD
+// request: credentialId
+// response: JSON-LD
+async function getJSONLDwithAuthToken(
+  request: Request,
+  responseToolkit: ResponseToolkit
+): Promise<ResponseObject> {
+  
+  // user wallet authToken
+  trinsic.options.authToken = request.params.authToken; 
+  
+  // get credential id
+  const credential_id = request.params.credentialId; 
+
+  console.log(request.params.authToken)
+  console.log(credential_id)
+
+  const result = await trinsic
+    .wallet()
+    .searchWallet(
+      SearchRequest.fromPartial({
         query: `SELECT * FROM c WHERE c.id = '${credential_id}}'`,
         continuationToken: "",
       })
@@ -628,6 +661,11 @@ export const trinsicVerifiableCredentials: ServerRoute[] = [
     method: "GET",
     path: "/getJSONLD/{credentialId}",
     handler: getJSONLD,
+  },
+  {
+    method: "GET",
+    path: "/getJSONLDwithAuthToken/{credentialId}/{authToken}",
+    handler: getJSONLDwithAuthToken,
   }
 ];
 

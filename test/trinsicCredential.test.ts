@@ -124,15 +124,28 @@ describe('test suite', async () => {
 
 	//-------------------
 	// request: authKey, credentialData
-	it("searchWallet", async() => {
+	// it("searchWallet", async() => {
+	// 	const res = await server.inject({
+	// 		method: "POST",
+	// 		payload: {
+	// 			"auth_token": "CiVodHRwczovL3RyaW5zaWMuaWQvc2VjdXJpdHkvdjEvb2Jlcm9uEkwKKnVybjp0cmluc2ljOndhbGxldHM6VW45TGpFNUVjN0ZCUFRvNzFURFpVQSIedXJuOnRyaW5zaWM6ZWNvc3lzdGVtczpkZWZhdWx0GjCAevCcnadUa3HuncGb_YN6BFwU-jgBzgZZHR4hABloaRWyEVo2T1uqFz0lOTWSrf0iAA",
+	// 			"query": 'SELECT c.id, c.type FROM c'
+	// 		},
+	// 		url: "/searchWallet",
+	// 	});
+
+	// 	expect(res.statusCode).to.equal(200);
+	// });
+
+	//-------------------
+	// request: authKey, credentialData
+	it("getJSONLDwithAuthToken", async() => {
 		const res = await server.inject({
-			method: "POST",
-			payload: {
-				"auth_token": "CiVodHRwczovL3RyaW5zaWMuaWQvc2VjdXJpdHkvdjEvb2Jlcm9uEkwKKnVybjp0cmluc2ljOndhbGxldHM6VW45TGpFNUVjN0ZCUFRvNzFURFpVQSIedXJuOnRyaW5zaWM6ZWNvc3lzdGVtczpkZWZhdWx0GjCAevCcnadUa3HuncGb_YN6BFwU-jgBzgZZHR4hABloaRWyEVo2T1uqFz0lOTWSrf0iAA",
-				"query": 'SELECT c.id, c.type FROM c'
-			},
-			url: "/searchWallet",
+			method: "GET",
+			url: "/getJSONLDwithAuthToken/urn:uuid:f7743e0775df414d97da32d5b6e7501c/CiVodHRwczovL3RyaW5zaWMuaWQvc2VjdXJpdHkvdjEvb2Jlcm9uEkkKKnVybjp0cmluc2ljOndhbGxldHM6N1VwRmtIUEdvektWUWNFSHVLYVZ3TSIbdXJuOnRyaW5zaWM6ZWNvc3lzdGVtczpDU0lSGjCTwP0t3e2BdAKnkSjJIJN1HMwlexAmvYBUGBzR_DEFkGZebj-IdHu48JKhMrjBdegiAA"
 		});
+
+		console.log(res.payload);
 
 		expect(res.statusCode).to.equal(200);
 	});
