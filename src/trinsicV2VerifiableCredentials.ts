@@ -453,10 +453,11 @@ async function searchWallet(
 
 
 // -------------
-// get JSON-LD
+// Sharing credential proof to verifier using QR Code containing URL /credential_id
+// to reduce size constraints when generating QR code with credential proof json-ld
 // request: credentialId
-// response: JSON-LD
-async function getJSONLD(
+// response: JSON-LD stringified
+async function shareProofToVerifier(
   request: Request,
   responseToolkit: ResponseToolkit
 ): Promise<ResponseObject> {
@@ -652,8 +653,8 @@ export const trinsicVerifiableCredentials: ServerRoute[] = [
   },
   {
     method: "GET",
-    path: "/getJSONLD/{credentialId}/{authToken}",
-    handler: getJSONLD,
+    path: "/shareProofToVerifier/{credentialId}/{authToken}",
+    handler: shareProofToVerifier,
   }
 ];
 
