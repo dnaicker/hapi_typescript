@@ -16,6 +16,7 @@ import {
   SearchCredentialTemplatesRequest,
   GetCredentialTemplateRequest,
   SendRequest,
+  AccountService,
   SearchRequest,
   CredentialService,
   CheckStatusRequest,
@@ -414,6 +415,8 @@ async function getCredentialTemplate(
   return response;
 }
 
+
+
 // -------------
 // search wallet
 // request: authKey, query, continuation_token
@@ -448,6 +451,7 @@ async function searchWallet(
   return response;
 }
 
+
 // -------------
 // get JSON-LD
 // request: credentialId
@@ -456,36 +460,6 @@ async function getJSONLD(
   request: Request,
   responseToolkit: ResponseToolkit
 ): Promise<ResponseObject> {
-
-  trinsic.options.authToken = process.env.AUTHTOKEN || ""; // use ecosystem auth key
-
-  // get credential id
-  const credential_id = request.params.credentialId;
-
-  const result = await trinsic
-    .wallet()
-    .searchWallet(
-      SearchRequest.fromPartial({
-        query: `SELECT * FROM c WHERE c.id = ${credential_id}}`,
-        continuationToken: "",
-      })
-    );
-
-  console.log(result);
-
-  const response = responseToolkit.response(result);
-  return response;
-}
-
-// -------------
-// get JSON-LD
-// request: credentialId
-// response: JSON-LD
-async function getJSONLDwithAuthToken(
-  request: Request,
-  responseToolkit: ResponseToolkit
-): Promise<ResponseObject> {
-  
   // user wallet authToken
   trinsic.options.authToken = request.params.authToken; 
   
@@ -499,7 +473,7 @@ async function getJSONLDwithAuthToken(
     .wallet()
     .searchWallet(
       SearchRequest.fromPartial({
-        query: `SELECT * FROM c WHERE c.id = '${credential_id}}'`,
+        query: `SELECT * FROM c WHERE c.id = '${credential_id}'`,
         continuationToken: "",
       })
     );
@@ -659,13 +633,8 @@ export const trinsicVerifiableCredentials: ServerRoute[] = [
   },
   {
     method: "GET",
-    path: "/getJSONLD/{credentialId}",
+    path: "/getJSONLD/{credentialId}/{authToken}",
     handler: getJSONLD,
-  },
-  {
-    method: "GET",
-    path: "/getJSONLDwithAuthToken/{credentialId}/{authToken}",
-    handler: getJSONLDwithAuthToken,
   }
 ];
 
