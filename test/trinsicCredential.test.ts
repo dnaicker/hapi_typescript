@@ -142,7 +142,7 @@ describe('test suite', async () => {
 	it("getJSONLDwithAuthToken", async() => {
 		const res = await server.inject({
 			method: "GET",
-			url: "/getJSONLDwithAuthToken/urn:uuid:f7743e0775df414d97da32d5b6e7501c/CiVodHRwczovL3RyaW5zaWMuaWQvc2VjdXJpdHkvdjEvb2Jlcm9uEkkKKnVybjp0cmluc2ljOndhbGxldHM6N1VwRmtIUEdvektWUWNFSHVLYVZ3TSIbdXJuOnRyaW5zaWM6ZWNvc3lzdGVtczpDU0lSGjCTwP0t3e2BdAKnkSjJIJN1HMwlexAmvYBUGBzR_DEFkGZebj-IdHu48JKhMrjBdegiAA"
+			url: "/getJSONLDwithAuthToken/urn:uuid:a0bb4617-15e9-43fb-99cb-f5bc208a0b90/CiVodHRwczovL3RyaW5zaWMuaWQvc2VjdXJpdHkvdjEvb2Jlcm9uEkkKKnVybjp0cmluc2ljOndhbGxldHM6N1VwRmtIUEdvektWUWNFSHVLYVZ3TSIbdXJuOnRyaW5zaWM6ZWNvc3lzdGVtczpDU0lSGjCTwP0t3e2BdAKnkSjJIJN1HMwlexAmvYBUGBzR_DEFkGZebj-IdHu48JKhMrjBdegiAA"
 		});
 
 		console.log(res.payload);

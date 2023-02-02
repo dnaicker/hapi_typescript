@@ -16,6 +16,7 @@ import {
 } from "@trinsic/trinsic";
 import {Request, ResponseToolkit, ResponseObject, ServerRoute} from '@hapi/hapi'
 
+
 //-------------------
 // create account
 // retrieve account details on login
@@ -113,6 +114,23 @@ async function registerAccountChallengeString(request: Request, responseToolkit:
     return response;
 	}
 }
+
+// -------------
+// get account info
+// request: authKey, query
+// response: credentialId
+// async function getAccountInfo(
+//   request: Request,
+//   responseToolkit: ResponseToolkit
+// ): Promise<ResponseObject> {
+//   trinsic.options.authToken = (request.payload as any).auth_token;
+
+//   const account = await accountService.info();
+//   console.log(account);
+
+//   const response = responseToolkit.response(account);
+//   return response;
+// }
 
 //-------------------
 // register event handlers to website routes
