@@ -9,6 +9,7 @@ import {
   TemplateData,
   TemplateField,
   TrinsicService,
+		AccountService,
   VerifyProofRequest,
   ServiceOptions,
   EcosystemInfoRequest,
@@ -117,20 +118,23 @@ async function registerAccountChallengeString(request: Request, responseToolkit:
 
 // -------------
 // get account info
-// request: authKey, query
+// request:
 // response: credentialId
-// async function getAccountInfo(
-//   request: Request,
-//   responseToolkit: ResponseToolkit
-// ): Promise<ResponseObject> {
-//   trinsic.options.authToken = (request.payload as any).auth_token;
+async function getAccountInfo(
+  request: Request,
+  responseToolkit: ResponseToolkit
+): Promise<ResponseObject> {
+		const trinsic = new TrinsicService();
 
-//   const account = await accountService.info();
-//   console.log(account);
+  trinsic.options.authToken = (request.payload as any).auth_token;
 
-//   const response = responseToolkit.response(account);
-//   return response;
-// }
+  const account = await trinsic.account().getInfo();
+
+  console.log(account);
+
+  const response = responseToolkit.response(account);
+  return response;
+}
 
 //-------------------
 // register event handlers to website routes

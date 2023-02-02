@@ -460,28 +460,47 @@ async function getJSONLD(
   request: Request,
   responseToolkit: ResponseToolkit
 ): Promise<ResponseObject> {
-  // user wallet authToken
-  trinsic.options.authToken = request.params.authToken; 
-  
-  // get credential id
-  const credential_id = request.params.credentialId; 
+  try {
+    // user wallet authToken
+    trinsic.options.authToken = request.params.authToken;
 
-  console.log(request.params.authToken)
-  console.log(credential_id)
+    // get credential id
+    const credential_id = request.params.credentialId;
 
-  const result = await trinsic
-    .wallet()
-    .searchWallet(
-      SearchRequest.fromPartial({
-        query: `SELECT * FROM c WHERE c.id = '${credential_id}'`,
-        continuationToken: "",
+    console.log(request.params.authToken)
+    console.log(credential_id)
+
+    const credential_json_ld = await trinsic
+      .wallet()
+      .searchWallet(
+        SearchRequest.fromPartial({
+          query: `SELECT * FROM c WHERE c.id = '${credential_id}'`,
+          continuationToken: "",
+        })
+      );
+
+
+    console.log(credential_json_ld?.items![0]);
+
+    // create proof from json-ld
+    const credential_proof = await trinsic.credential().createProof(
+      CreateProofRequest.fromPartial({
+        itemId: credential_id,
+        revealDocumentJson: credential_json_ld?.items![0],
       })
     );
 
-  console.log(result);
+    console.log(credential_proof);
 
-  const response = responseToolkit.response(result);
-  return response;
+    const response = responseToolkit.response(credential_proof);
+    return response;
+  } catch (error) {
+    console.log(error);
+    console.log(typeof error);
+    const response = responseToolkit.response("error");
+    return response;
+  }
+
 }
 
 // -------------
@@ -549,8 +568,8 @@ async function qrCodeShareCredential(request: Request, responseToolkit: Response
   // response otp (sent to email) and challenge
   const loginResponse = await trinsic.account().login(
     LoginRequest.fromPartial({
-        email: `${request.params.email}`,
-        ecosystemId: "urn:trinsic:ecosystems:CSIR",
+      email: `${request.params.email}`,
+      ecosystemId: "urn:trinsic:ecosystems:CSIR",
     })
   );
 

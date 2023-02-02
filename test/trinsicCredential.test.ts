@@ -139,10 +139,10 @@ describe('test suite', async () => {
 
 	//-------------------
 	// request: authKey, credentialData
-	it("getJSONLDwithAuthToken", async() => {
+	it("getJSONLD", async() => {
 		const res = await server.inject({
 			method: "GET",
-			url: "/getJSONLDwithAuthToken/urn:uuid:a0bb4617-15e9-43fb-99cb-f5bc208a0b90/CiVodHRwczovL3RyaW5zaWMuaWQvc2VjdXJpdHkvdjEvb2Jlcm9uEkkKKnVybjp0cmluc2ljOndhbGxldHM6N1VwRmtIUEdvektWUWNFSHVLYVZ3TSIbdXJuOnRyaW5zaWM6ZWNvc3lzdGVtczpDU0lSGjCTwP0t3e2BdAKnkSjJIJN1HMwlexAmvYBUGBzR_DEFkGZebj-IdHu48JKhMrjBdegiAA"
+			url: "/getJSONLD/urn:uuid:a0bb4617-15e9-43fb-99cb-f5bc208a0b90/CiVodHRwczovL3RyaW5zaWMuaWQvc2VjdXJpdHkvdjEvb2Jlcm9uEkkKKnVybjp0cmluc2ljOndhbGxldHM6N1VwRmtIUEdvektWUWNFSHVLYVZ3TSIbdXJuOnRyaW5zaWM6ZWNvc3lzdGVtczpDU0lSGjCTwP0t3e2BdAKnkSjJIJN1HMwlexAmvYBUGBzR_DEFkGZebj-IdHu48JKhMrjBdegiAA"
 		});
 
 		console.log(res.payload);
