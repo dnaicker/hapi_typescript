@@ -1,9 +1,10 @@
-import Hapi from "@hapi/hapi";
+import * as Hapi from '@hapi/hapi';
 import { Request, Server } from "@hapi/hapi";
 import {helloRoutes} from "./hello";
 import { trinsicAccount } from "./trinsicv2Account";
 import {trinsicEcoSystemInfo} from "./trinsicv2Ecosystem";
 import {trinsicVerifiableCredentials} from "./trinsicV2VerifiableCredentials";
+
 
 export let server: Server;
 
