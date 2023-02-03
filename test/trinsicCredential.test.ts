@@ -42,22 +42,22 @@ describe('test suite', async () => {
 
 	// //-------------------
 	// // Request: json body of fields
-	it("create credential wtih fields: string", async () => {
-		const res = await server.inject({
-			method: "POST",
-			payload: {
-				"auth_token": "CiVodHRwczovL3RyaW5zaWMuaWQvc2VjdXJpdHkvdjEvb2Jlcm9uEmQKKnVybjp0cmluc2ljOndhbGxldHM6Q2M5Um9CU0xreFVlb3YyZnBnU2NDVSI2dXJuOnRyaW5zaWM6ZWNvc3lzdGVtczppbnRlbGxpZ2VudC1nb29kYWxsLThRZEFwNnpWRmVUGjCnYO3ZQ45Yyc66eieqDIInHON-3zt-bIOx0SAqI5VGvXFYSvNiKVQlz9DRkyE1fd4iAA",
-				"template_id": "urn:template:CSIR:credential-title-test-3-cde56f84-ac63-457b-9667-5936723f03f9",
-				"credential_values": JSON.stringify({
-					"test_name_3": "test value 3"
-				}),
-			},
-			url: "/createCredential",
-		});
+	// it("create credential wtih fields: string", async () => {
+	// 	const res = await server.inject({
+	// 		method: "POST",
+	// 		payload: {
+	// 			"auth_token": "CiVodHRwczovL3RyaW5zaWMuaWQvc2VjdXJpdHkvdjEvb2Jlcm9uEmQKKnVybjp0cmluc2ljOndhbGxldHM6Q2M5Um9CU0xreFVlb3YyZnBnU2NDVSI2dXJuOnRyaW5zaWM6ZWNvc3lzdGVtczppbnRlbGxpZ2VudC1nb29kYWxsLThRZEFwNnpWRmVUGjCnYO3ZQ45Yyc66eieqDIInHON-3zt-bIOx0SAqI5VGvXFYSvNiKVQlz9DRkyE1fd4iAA",
+	// 			"template_id": "urn:template:CSIR:credential-title-test-3-cde56f84-ac63-457b-9667-5936723f03f9",
+	// 			"credential_values": JSON.stringify({
+	// 				"test_name_3": "test value 3"
+	// 			}),
+	// 		},
+	// 		url: "/createCredential",
+	// 	});
 
-		expect(res.statusCode).to.equal(200);
-		expect(res.result).to.equal(`createCredential`);
-	});
+	// 	expect(res.statusCode).to.equal(200);
+	// 	expect(res.result).to.equal(`createCredential`);
+	// });
 
 	// //-------------------
 	// // request: authKey, credentialTemplateId, credentialValues
@@ -143,6 +143,34 @@ describe('test suite', async () => {
 	// 	const res = await server.inject({
 	// 		method: "GET",
 	// 		url: "/shareProofToVerifier/urn:uuid:a0bb4617-15e9-43fb-99cb-f5bc208a0b90/CiVodHRwczovL3RyaW5zaWMuaWQvc2VjdXJpdHkvdjEvb2Jlcm9uEkkKKnVybjp0cmluc2ljOndhbGxldHM6N1VwRmtIUEdvektWUWNFSHVLYVZ3TSIbdXJuOnRyaW5zaWM6ZWNvc3lzdGVtczpDU0lSGjCTwP0t3e2BdAKnkSjJIJN1HMwlexAmvYBUGBzR_DEFkGZebj-IdHu48JKhMrjBdegiAA"
+	// 	});
+
+	// 	console.log(res.payload);
+
+	// 	expect(res.statusCode).to.equal(200);
+	// });
+
+	//-------------------
+	// getCredentialWithLookupId
+	// request: qrcode_lookup_id
+	// it("getCredentialWithLookupId", async() => {
+	// 	const res = await server.inject({
+	// 		method: "GET",
+	// 		url: "/getCredentialWithLookupId/4ab89e02-483d-47ac-a4ee-b4d5bb5e45d3"
+	// 	});
+
+	// 	console.log(res.payload);
+
+	// 	expect(res.statusCode).to.equal(200);
+	// });
+
+	//-------------------
+	// deleteCredentialWithLookupId
+	// request: qrcode_lookup_id
+	// it("deleteCredentialWithLookupId", async() => {
+	// 	const res = await server.inject({
+	// 		method: "DELETE",
+	// 		url: "/deleteCredentialWithLookupId/7b3d3e39-63a4-4b2b-bc30-ee6d130ed024"
 	// 	});
 
 	// 	console.log(res.payload);

@@ -162,7 +162,78 @@ async function createCredential(
     const response = responseToolkit.response("error");
     return response;
   }
+}
 
+// -------------
+// lookup credential using database lookup id
+// used when scanning qr code in a shorten url form
+// request: lookup id
+// return credential
+// wallet holder
+async function getCredentialWithLookupId(
+  request: Request,
+  responseToolkit: ResponseToolkit
+): Promise<ResponseObject> {
+  console.log("getCredentialWithLookupId");
+
+  try {
+
+    const credential = await AppDataSource.initialize()
+    .then(async () => {
+
+      const lookup_id = request.params.qrcode_lookup_id;
+
+      const query = AppDataSource.getRepository(CredentialTemp)
+      
+      const result = await query.findOneBy({lookup: lookup_id});
+      
+      return result?.credential;
+
+    })
+    .catch((error) => { return {error: error, message: 'credential not found'}})
+
+    const response = responseToolkit.response(credential!);
+    return response;
+  } catch (error) {
+    console.log(error);
+    const response = responseToolkit.response("error");
+    return response;
+  }
+}
+
+// -------------
+// lookup credential using database lookup id
+// used when after credential inserted into wallet id
+// request: lookup id
+// wallet holder
+async function deleteCredentialWithLookupId(
+  request: Request,
+  responseToolkit: ResponseToolkit
+): Promise<ResponseObject> {
+  console.log("deleteCredentialWithLookupId");
+
+  try {
+
+    await AppDataSource.initialize()
+    .then(async () => {
+
+      const lookup_id = request.params.qrcode_lookup_id;
+
+      const query = AppDataSource.getRepository(CredentialTemp)
+      
+      const result = await query.findOneBy({lookup: lookup_id});
+
+      await query.remove(result!);
+    })
+    .catch((error) => console.log(error))
+
+    const response = responseToolkit.response(`Removed ${request.params.qrcode_lookup_id}`);
+    return response;
+  } catch (error) {
+    console.log(error);
+    const response = responseToolkit.response("error");
+    return response;
+  }
 }
 
 // -------------
@@ -684,6 +755,16 @@ export const trinsicVerifiableCredentials: ServerRoute[] = [
     method: "GET",
     path: "/shareProofToVerifier/{credentialId}/{authToken}",
     handler: shareProofToVerifier,
+  },
+  {
+    method: "GET",
+    path: "/getCredentialWithLookupId/{qrcode_lookup_id}",
+    handler: getCredentialWithLookupId,
+  },
+  {
+    method: "DELETE",
+    path: "/deleteCredentialWithLookupId/{qrcode_lookup_id}",
+    handler: deleteCredentialWithLookupId,
   }
 ];
 

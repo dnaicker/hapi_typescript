@@ -118,7 +118,8 @@ async function registerAccountChallengeString(request: Request, responseToolkit:
 
 // -------------
 // get account info
-// request:
+// can be used to display user account details
+// request: auth_token
 // response: credentialId
 async function getAccountInfo(
   request: Request,
@@ -126,7 +127,7 @@ async function getAccountInfo(
 ): Promise<ResponseObject> {
 		const trinsic = new TrinsicService();
 
-  trinsic.options.authToken = (request.payload as any).auth_token;
+  trinsic.options.authToken = request.params.auth_token;
 
   const account = await trinsic.account().getInfo();
 
@@ -143,6 +144,11 @@ export const trinsicAccount: ServerRoute[] = [
 		method: 'GET',
 		path: '/trinsicCreateOrLoginAccount/{email}',
 		handler: createOrLoginAccount
+	},
+	{
+		method: 'GET',
+		path: '/getAccountInfo/{auth_token}',
+		handler: getAccountInfo
 	},
 	{
 		method: 'POST',
