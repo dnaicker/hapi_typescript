@@ -138,20 +138,15 @@ async function createCredential(
     // store credential json-ld in database
     const lookup_id = await AppDataSource.initialize()
     .then(async () => {
-      console.log("Inserting a new credential into the database...")
       const credential_temp = new CredentialTemp()
       credential_temp.lookup = uuid();
       credential_temp.credential = JSON.stringify(credential)
 
       await AppDataSource.manager.save(credential_temp)
       
-      console.log("Saved a new credential_temp with id: " + credential_temp.lookup)
-  
-      console.log("Loading users from the database...")
+      // const credentials = await AppDataSource.manager.find(CredentialTemp)
       
-      const credentials = await AppDataSource.manager.find(CredentialTemp)
-      
-      console.log("Loaded credentials: ", credentials)
+      // console.log("Loaded credentials: ", credentials)
 
       return credential_temp.lookup;
 
