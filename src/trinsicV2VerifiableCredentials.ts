@@ -155,7 +155,7 @@ async function createCredential(
 
     console.log({credential: credential, qrCodeLookUp: lookup_id});
 
-    const response = responseToolkit.response({credential, lookup_id});
+    const response = responseToolkit.response({credential: credential, lookup_id: lookup_id});
     return response;
   } catch (error) {
     console.log(error);
