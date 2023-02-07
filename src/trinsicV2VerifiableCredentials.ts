@@ -351,35 +351,7 @@ async function createCredentialProof(
   return response;
 }
 
-// -------------
-// create credential proof
-// issuer
-// request: auth_token (String), credential_id (String)
-// response: message to say complete
-async function createSelectiveCredentialProof(
-  request: Request,
-  responseToolkit: ResponseToolkit
-): Promise<ResponseObject> {
-  trinsic.options.authToken = (request.payload as any).auth_token;
 
-  console.log((request.payload as any).auth_token);
-  console.log((request.payload as any).credential_id);
-  console.log((request.payload as any).reveal_template);
-
-  const proofResponse = await trinsic.credential().createProof(
-    CreateProofRequest.fromPartial({
-      itemId: (request.payload as any).credential_id,
-      revealTemplate: {
-        templateAttributes: (request.payload as any).reveal_template,
-      }
-    })
-  );
-
-  console.log(proofResponse);
-
-  const response = responseToolkit.response(proofResponse);
-  return response;
-}
 
 // -------------
 // create selective credential proof
@@ -498,6 +470,36 @@ async function searchTemplate(
 }
 
 // -------------
+// verify selected reveal temlpate fields to generate credential proof
+// issuer
+// request: auth_token (String), credential_id (String), revealTemplate (Array of Strings)
+// response: sends back validation checks for SchemaConformance , IssuerIsSigner , CredentialStatus , SignatureVerification 
+async function verifySelectiveCredentialProof(
+  request: Request,
+  responseToolkit: ResponseToolkit
+): Promise<ResponseObject> {
+  trinsic.options.authToken = (request.payload as any).auth_token;
+
+  console.log((request.payload as any).auth_token);
+  console.log((request.payload as any).credential_id);
+  console.log((request.payload as any).reveal_template);
+
+  const proofResponse = await trinsic.credential().createProof(
+    CreateProofRequest.fromPartial({
+      itemId: (request.payload as any).credential_id,
+      revealTemplate: {
+        templateAttributes: (request.payload as any).reveal_template,
+      }
+    })
+  );
+
+  console.log(proofResponse);
+
+  const response = responseToolkit.response(proofResponse);
+  return response;
+}
+
+// -------------
 // get credential template
 // request: authKey, query
 // response: credentialId
@@ -560,9 +562,9 @@ async function searchWallet(
 // -------------
 // Sharing credential proof to verifier using QR Code containing URL /credential_id
 // to reduce size constraints when generating QR code with credential proof json-ld
-// request: credentialId
+// request: authToken credentialId
 // response: JSON-LD stringified
-async function shareProofToVerifier(
+async function shareCredentialProof(
   request: Request,
   responseToolkit: ResponseToolkit
 ): Promise<ResponseObject> {
@@ -687,14 +689,14 @@ export const trinsicVerifiableCredentials: ServerRoute[] = [
     handler: createCredentialProof,
   },
   {
-    method: "POST",
-    path: "/createSelectiveCredentialProof",
-    handler: createSelectiveCredentialProof,
-  },
-  {
     method: "PUT",
     path: "/verifyCredentialProof",
     handler: verifyCredentialProof,
+  },
+  {
+    method: "POST",
+    path: "/verifySelectiveCredentialProof",
+    handler: verifySelectiveCredentialProof,
   },
   {
     method: "POST",
@@ -728,8 +730,8 @@ export const trinsicVerifiableCredentials: ServerRoute[] = [
   },
   {
     method: "GET",
-    path: "/shareProofToVerifier/{credentialId}/{authToken}",
-    handler: shareProofToVerifier,
+    path: "/shareCredentialProof/{credentialId}/{authToken}",
+    handler: shareCredentialProof,
   },
   {
     method: "GET",
