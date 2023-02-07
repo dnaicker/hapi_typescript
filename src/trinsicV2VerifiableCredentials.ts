@@ -124,7 +124,7 @@ async function createCredential(
     trinsic.options.authToken = (request.payload as any).auth_token;
 
     // todo: validate template using joi
-    console.log("issueResponse");
+    console.log("issueResponse 3");
 
     // send request to Trinsic
     const credential = await trinsic.credential().issueFromTemplate(
@@ -134,19 +134,22 @@ async function createCredential(
       })
     );
 
+    console.log("postgres");
 
     // store credential json-ld in database
     const lookup_id = await AppDataSource.initialize()
     .then(async () => {
+      console.log('looking into postgres');
+
       const credential_temp = new CredentialTemp()
       credential_temp.lookup = uuid();
       credential_temp.credential = JSON.stringify(credential)
 
       await AppDataSource.manager.save(credential_temp)
       
-      // const credentials = await AppDataSource.manager.find(CredentialTemp)
+      const credentials = await AppDataSource.manager.find(CredentialTemp)
       
-      // console.log("Loaded credentials: ", credentials)
+      console.log("Loaded credentials: ", credentials)
 
       return credential_temp.lookup;
 
@@ -154,9 +157,11 @@ async function createCredential(
     .catch((error) => console.log(error))
 
     console.log({credential: credential, qrCodeLookUp: lookup_id});
+    
+    console.log("issueResponse 4000 issued");
 
-    const response = responseToolkit.response({credential: credential, lookup_id: lookup_id});
-    return response;
+    const response_two = responseToolkit.response({credential: credential, lookup_id: lookup_id});
+    return response_two;
   } catch (error) {
     console.log(error);
     const response = responseToolkit.response("error");
@@ -654,31 +659,6 @@ async function checkRevocationStatus(
   return response;
 }
 
-
-//-------------------
-// Share Credential by generating QR Code returns JSON-LD
-// request: 
-// response: 
-async function qrCodeShareCredential(request: Request, responseToolkit: ResponseToolkit): Promise<ResponseObject> {
-  const trinsic = new TrinsicService();
-
-  // retrieve email
-  // todo: validate that email field was sent using joi
-  // todo: verify no escape characters in request
-
-  // response otp (sent to email) and challenge
-  const loginResponse = await trinsic.account().login(
-    LoginRequest.fromPartial({
-      email: `${request.params.email}`,
-      ecosystemId: "urn:trinsic:ecosystems:CSIR",
-    })
-  );
-
-  // if not account detials sent back, show a ui screen that asks for input for one time pin
-  const response = responseToolkit.response(loginResponse);
-  return response;
-}
-
 //-------------------
 export const trinsicVerifiableCredentials: ServerRoute[] = [
   {
@@ -745,11 +725,6 @@ export const trinsicVerifiableCredentials: ServerRoute[] = [
     method: "POST",
     path: "/checkRevocationStatus",
     handler: checkRevocationStatus,
-  },
-  {
-    method: "GET",
-    path: "/qrCodeShareCredential",
-    handler: qrCodeShareCredential,
   },
   {
     method: "GET",
