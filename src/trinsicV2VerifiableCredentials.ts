@@ -156,6 +156,8 @@ async function createCredential(
     })
     .catch((error) => console.log(error))
 
+    AppDataSource.destroy();
+
     console.log({credential: credential, qrCodeLookUp: lookup_id});
     
     console.log("issueResponse 4000 issued");
@@ -197,6 +199,8 @@ async function getCredentialWithLookupId(
     })
     .catch((error) => { return {error: error, message: 'credential not found'}})
 
+    AppDataSource.destroy();
+
     const response = responseToolkit.response(credential!);
     return response;
   } catch (error) {
@@ -231,6 +235,8 @@ async function deleteCredentialWithLookupId(
       await query.remove(result!);
     })
     .catch((error) => console.log(error))
+
+    AppDataSource.destroy();
 
     const response = responseToolkit.response(`Removed ${request.params.qrcode_lookup_id}`);
     return response;
