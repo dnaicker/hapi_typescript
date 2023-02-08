@@ -178,6 +178,38 @@ describe('test suite', async () => {
 	// 	expect(res.statusCode).to.equal(200);
 	// });
 
+	//-------------W------
+	// createVerificationQRCodeLookup
+	// request: authToken templateId
+	it("createVerificationQRCodeLookup", async() => {
+		const res = await server.inject({
+			method: "GET",
+			url: "/createVerificationQRCodeLookup/CiVodHRwczovL3RyaW5zaWMuaWQvc2VjdXJpdHkvdjEvb2Jlcm9uEkkKKnVybjp0cmluc2ljOndhbGxldHM6N1VwRmtIUEdvektWUWNFSHVLYVZ3TSIbdXJuOnRyaW5zaWM6ZWNvc3lzdGVtczpDU0lSGjCTwP0t3e2BdAKnkSjJIJN1HMwlexAmvYBUGBzR_DEFkGZebj-IdHu48JKhMrjBdegiAA/urn:template:CSIR:csir-building-access-card-d54c3e94-867d-48fe-a9e7-32526b838c6f"
+		});
+
+		console.log(res.payload);
+
+		expect(res.statusCode).to.equal(200);
+	});
+
+	//-------------------
+	// createVerificationQRCodeLookup
+	// request: authToken templateId
+	// it("receiveVerificationRequestWithQRCodeLookupId", async() => {
+	// 	const res = await server.inject({
+	// 		method: "POST",
+	// 		payload: {
+	// 			"credential_proof": '{"@context":["https://www.w3.org/2018/credentials/v1","https://w3id.org/bbs/v1","https://schema.trinsic.cloud/CSIR/credential-title-test-3-cde56f84-ac63-457b-9667-5936723f03f9/context"],"id":"urn:uuid:64b72f1c86f34ad2a65d7b20a92adbe1","type":["CredentialTitleTest3-cde56f84-ac63-457b-9667-5936723f03f9","VerifiableCredential"],"credentialSchema":{"id":"https://schema.trinsic.cloud/CSIR/credential-title-test-3-cde56f84-ac63-457b-9667-5936723f03f9","type":"JsonSchemaValidator2018"},"credentialStatus":{"id":"urn:revocation-registry:intelligent-goodall-8QdAp6zVFeT:E95rX3mLwqYVPtt3DLcrC7#1","type":"RevocationList2020Status","revocationListCredential":"urn:revocation-registry:intelligent-goodall-8QdAp6zVFeT:E95rX3mLwqYVPtt3DLcrC7","revocationListIndex":"1"},"credentialSubject":{"id":"urn:uuid:f4ba57366bbb428ebcea16dd37550a25","test_name_3":"test value 3"},"issuanceDate":"2022-11-15T07:35:07.2344257Z","issuer":"did:key:z5TcDaC3hWxTACAbQNXTKpumJUCGPjyoRiJjYBKZj6jRFGrGUR4d58BYTg4Btqi5LA2udUE4pkCqyHrNdqY5A3MoRCWX5dhiZvhrHhvdqYujfRthubmmGwFjNFBoHPjiZSNkq2p2Cu5ZSzNzHjPzxuFEYFJijNELmXybBspJBnDkVktQMBo9vWysKRk5w3c72A3C2Hvah","proof":{"type":"BbsBlsSignatureProof2020","created":"2022-11-15T07:35:07Z","nonce":"LtJOevCb/C8idEBQ8y1jvlNf0V27odDdAuAEW0cx/8oHp+YspQCRkGxvaI6d74R0j34=","proofPurpose":"assertionMethod","proofValue":"ABAA//+jrFt7Cxf523IkonGm4E6wThl/3+UBLuc9v9cvTypbNNprn69bF9IgfLBMQENjWG+u/+FcSzBPDnrlGpERoD9VQnBwxwwxjk6D157h8lFda4PjZjgtDTJc+YfyjZUC9raJEN41XCOIM/secxRfmesC2iqEDDUdMS1SDehIX2rOnuxoVDWW7rRSRdzNhOi75GcAAAB0srBc1PJ3NOk2ust62A/LubvaVY0TOufsTiorDImhWA04jSJQbtdrlXphXemn/OEcAAAAAke5S0CqN5EwhE8HjNxJcMpCVZQMBQAzanjiU357Z+xCWhF5fPV173FaTi+mEOlbKHJGb+HUf8UTNHHDG8YZsWCuPhmjZO0nlBWAbLK56F7yBUm7QjU8THhXGGvRmxSumlMgpZrAY1e93RMSOgbkd5kAAAACb+m518v7qsJCE9AD7lgW64tmlYDTqwAiv+zHC4pSYEYVcX+D5k7pZ7o3rw5O1RT+TBtldoQw9DCinY99OrFQ+A==","verificationMethod":"did:key:z5TcDaC3hWxTACAbQNXTKpumJUCGPjyoRiJjYBKZj6jRFGrGUR4d58BYTg4Btqi5LA2udUE4pkCqyHrNdqY5A3MoRCWX5dhiZvhrHhvdqYujfRthubmmGwFjNFBoHPjiZSNkq2p2Cu5ZSzNzHjPzxuFEYFJijNELmXybBspJBnDkVktQMBo9vWysKRk5w3c72A3C2Hvah#zUC711nEkxR5RikVtrNWwrmvFpuWvbmcePXajGgraXp9772W8pE8YWYcPUkcjCb6gpUfzmPVfATtoir86kLxDGRWfhitGw9AdsL2E8LAiVybKAHSU5pnpVz53wZG9pM8ShntG9K"}}',
+	// 			"lookup_id": "1384ee63-06ac-41b3-8fe6-47930d45f35b"
+	// 		},
+	// 		url: "/receiveVerificationRequestWithQRCodeLookupId"
+	// 	});
+
+	// 	console.log(res.payload);
+
+	// 	expect(res.statusCode).to.equal(200);
+	// });
+
 	//-------------------
 	// it("emailCredential", async() => {
 	// 	const res = await server.inject({
