@@ -30,6 +30,7 @@ import {
 import { v4 as uuid } from "uuid";
 import { AppDataSource } from "./data-source"
 import { CredentialTemp } from "./entity/CredentialTemp"
+import { Verification } from "./entity/Verification";
 
 const trinsic = new TrinsicService();
 
@@ -667,6 +668,143 @@ async function checkRevocationStatus(
   return response;
 }
 
+
+
+// -------------
+// Credential template data and lookUp id sent back to mobile device as creating QR code with template data is too large
+// request: authToken templateId fieldsAndValuesRequired ([{field: "value"},...])
+// response: 
+async function createVerificationQRCodeLookup(
+  request: Request,
+  responseToolkit: ResponseToolkit
+): Promise<ResponseObject> {
+  try {
+    // user wallet authToken
+    trinsic.options.authToken = request.params.authToken;
+
+    const template_id = request.params.templateId;
+    const fields_and_values_required = request.params.fieldsAndValuesRequired;
+
+    // console.log(request.params.authToken)
+    // console.log(template_id)
+    console.log(fields_and_values_required)
+
+    // get template data
+    const template = await trinsic
+    .template()
+    .get(
+      GetCredentialTemplateRequest.fromPartial({
+        id: request.params.templateId,
+      })
+    );
+
+    //create qrCodeLookup from db proxy
+    const look_up_id = await AppDataSource.initialize()
+    .then(async () => {
+      const verification = new Verification()
+      verification.lookUp = uuid();
+      verification.templateId = template_id
+      verification.dateTime = new Date().toISOString();
+      verification.fieldsAndValuesRequired = fields_and_values_required;
+      verification.status = "pending"
+
+      await AppDataSource.manager.save(verification)
+      
+      return verification.lookUp;
+
+    })
+    .catch((error) => console.log(error))
+
+    AppDataSource.destroy();
+
+    console.log(template);
+
+    const response = responseToolkit.response({template: template, lookup: look_up_id, fieldsAndValuesRequired: fields_and_values_required});
+    return response;
+  } catch (error) {
+    console.log(error);
+    const response = responseToolkit.response({error: error, error_message: "server error occured"});
+    return response;
+  }
+}
+
+// -------------
+// use ecosystem auth token
+// request: verificationProof(json-ld) proof lookup_id
+// response: 
+async function receiveVerificationRequestWithQRCodeLookupId(
+  request: Request,
+  responseToolkit: ResponseToolkit
+): Promise<ResponseObject> {
+  try {
+    let match = {};
+
+    // user wallet authToken
+    trinsic.options.authToken = process.env.AUTHTOKEN;
+
+    // get credential id
+    const credential_proof = JSON.parse((request.payload as any).credential_proof);
+    const lookup_id = (request.payload as any).lookup_id;
+
+    // retrieved lookup fields
+    const fields_and_values_required = JSON.parse((request.payload as any).fields_and_values_required);
+
+    console.log(fields_and_values_required);
+
+
+    // compare value_required with credential_proof 
+
+    // loop through fields_and_values_required
+    for(let credential_field in credential_proof.credentialSubject) {
+      for(let business_field in fields_and_values_required) {
+        if(credential_field == business_field) {
+          if(credential_proof.credentialSubject[credential_field] == fields_and_values_required[business_field]) {
+            match[credential_field] = "valid";
+          }
+        }
+      }
+    }
+
+    console.log(match);
+
+
+    // verify proof from json-ld
+    let verifyResponse = await trinsic.credential().verifyProof({
+      proofDocumentJson: credential_proof,
+    });
+
+    //update status of verification qrCodeLookup to complete
+    const result = await AppDataSource.initialize()
+    .then(async () => {
+      const verification = new Verification()
+
+      const query = AppDataSource.getRepository(Verification)
+      
+      // find verification by lookup_id
+      const result = await query.findOneBy({lookUp: lookup_id});
+
+      //update status of verification qrCodeLookup to complete
+      const update_result = query.update(result!.id.toString(), {status: "completed"});
+      
+      return update_result;
+
+    })
+    .catch((error) => console.log(error))
+
+    AppDataSource.destroy();
+
+    console.log(result);
+
+    const response = responseToolkit.response({verification_result: verifyResponse, lookup_result: result});
+    return response;
+  } catch (error) {
+    console.log(error);
+    const response = responseToolkit.response({error: error, error_message: "server error occured"});
+    return response;
+  }
+}
+
+
 //-------------------
 export const trinsicVerifiableCredentials: ServerRoute[] = [
   {
@@ -733,6 +871,16 @@ export const trinsicVerifiableCredentials: ServerRoute[] = [
     method: "POST",
     path: "/checkRevocationStatus",
     handler: checkRevocationStatus,
+  },
+  {
+    method: "GET",
+    path: "/createVerificationQRCodeLookup/{authToken}/{templateId}/{fieldsAndValuesRequired}",
+    handler: createVerificationQRCodeLookup,
+  },
+  {
+    method: "POST",
+    path: "/receiveVerificationRequestWithQRCodeLookupId",
+    handler: receiveVerificationRequestWithQRCodeLookupId,
   },
   {
     method: "GET",
