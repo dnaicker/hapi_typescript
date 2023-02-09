@@ -704,8 +704,9 @@ async function createVerificationQRCodeLookup(
   responseToolkit: ResponseToolkit
 ): Promise<ResponseObject> {
   try {
-    // user wallet authToken
-    trinsic.options.authToken = request.params.authToken;
+    
+    // issuer authToken
+    trinsic.options.authToken = process.env.AUTHTOKEN;
 
     const template_id = request.params.templateId;
     const fields_and_values_required = request.params.fieldsAndValuesRequired;
@@ -912,7 +913,7 @@ export const trinsicVerifiableCredentials: ServerRoute[] = [
   },
   {
     method: "GET",
-    path: "/createVerificationQRCodeLookup/{authToken}/{templateId}/{fieldsAndValuesRequired}",
+    path: "/createVerificationQRCodeLookup/{templateId}/{fieldsAndValuesRequired}",
     handler: createVerificationQRCodeLookup,
   },
   {

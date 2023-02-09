@@ -181,30 +181,30 @@ describe('test suite', async () => {
 	//-------------W------
 	// createVerificationQRCodeLookup
 	// request: authToken templateId
-	// it("createVerificationQRCodeLookup", async() => {
-	// 	const res = await server.inject({
-	// 		method: "GET",
-	// 		url: "/createVerificationQRCodeLookup/CiVodHRwczovL3RyaW5zaWMuaWQvc2VjdXJpdHkvdjEvb2Jlcm9uEkkKKnVybjp0cmluc2ljOndhbGxldHM6N1VwRmtIUEdvektWUWNFSHVLYVZ3TSIbdXJuOnRyaW5zaWM6ZWNvc3lzdGVtczpDU0lSGjCTwP0t3e2BdAKnkSjJIJN1HMwlexAmvYBUGBzR_DEFkGZebj-IdHu48JKhMrjBdegiAA/urn:template:CSIR:csir-building-access-card-d54c3e94-867d-48fe-a9e7-32526b838c6f/[{building_number: '43'}]"
-	// 	});
-
-	// 	console.log(res.payload);
-
-	// 	expect(res.statusCode).to.equal(200);
-	// });
-
-	//-------------W------
-	// createMobileAppScanQRCodeURLDetails
-	// request: api, requirements
-	it("createMobileAppScanQRCodeURLDetails", async() => {
+	it("createVerificationQRCodeLookup", async() => {
 		const res = await server.inject({
 			method: "GET",
-			url: "/createMobileAppScanQRCodeURLDetails/createVerificationQRCodeLookup/{'api': 'createVerificationQRCodeLookup' , 'authToken': 'you provide', 'lookup_id': 'send back to verifier', 'templateId': 'send back to verifier', 'fieldsAndValuesRequired': 'send back to verifier'}"
+			url: "/createVerificationQRCodeLookup/urn:template:CSIR:csir-building-access-card-d54c3e94-867d-48fe-a9e7-32526b838c6f/[{building_number: '43'}]"
 		});
 
 		console.log(res.payload);
 
 		expect(res.statusCode).to.equal(200);
 	});
+
+	//-------------W------
+	// createMobileAppScanQRCodeURLDetails
+	// request: api, requirements
+	// it("createMobileAppScanQRCodeURLDetails", async() => {
+	// 	const res = await server.inject({
+	// 		method: "GET",
+	// 		url: "/createMobileAppScanQRCodeURLDetails/createVerificationQRCodeLookup/{'api': 'createVerificationQRCodeLookup' , 'authToken': 'you provide', 'lookup_id': 'send back to verifier', 'templateId': 'send back to verifier', 'fieldsAndValuesRequired': 'send back to verifier'}"
+	// 	});
+
+	// 	console.log(res.payload);
+
+	// 	expect(res.statusCode).to.equal(200);
+	// });
 
 	//-------------------
 	// createVerificationQRCodeLookup
