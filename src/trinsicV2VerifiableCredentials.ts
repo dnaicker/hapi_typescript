@@ -671,6 +671,32 @@ async function checkRevocationStatus(
 
 
 // -------------
+// send back requirements for verifying credential
+// request: url , requirements
+// response: url and requirements
+async function createMobileAppScanQRCodeURLDetails(
+  request: Request,
+  responseToolkit: ResponseToolkit
+): Promise<ResponseObject> {
+  try {
+    let obj = {};
+
+    // create json object
+    obj["api"] = request.params.api;
+    obj["requirements"] = request.params.requirements;
+
+    console.log(obj);
+
+    const response = responseToolkit.response(obj);
+    return response;
+  } catch (error) {
+    console.log(error);
+    const response = responseToolkit.response({error: error, error_message: "server error occured"});
+    return response;
+  }
+}
+
+// -------------
 // Credential template data and lookUp id sent back to mobile device as creating QR code with template data is too large
 // request: authToken templateId fieldsAndValuesRequired ([{field: "value"},...])
 // response: 
@@ -739,7 +765,7 @@ async function receiveVerificationRequestWithQRCodeLookupId(
   try {
     let match = {};
 
-    // user wallet authToken
+    // issuer authToken
     trinsic.options.authToken = process.env.AUTHTOKEN;
 
     // get credential id
@@ -767,11 +793,12 @@ async function receiveVerificationRequestWithQRCodeLookupId(
 
     console.log(match);
 
-
     // verify proof from json-ld
     let verifyResponse = await trinsic.credential().verifyProof({
-      proofDocumentJson: credential_proof,
+      proofDocumentJson: JSON.stringify(credential_proof),
     });
+
+
 
     //update status of verification qrCodeLookup to complete
     const result = await AppDataSource.initialize()
@@ -792,6 +819,13 @@ async function receiveVerificationRequestWithQRCodeLookupId(
     .catch((error) => console.log(error))
 
     AppDataSource.destroy();
+
+    // trust registry issuer check
+
+    // build array of checks to return
+      // trust registry [x]
+      // verification checks [x]
+      // business check (matching fields and values) [x]
 
     console.log(result);
 
@@ -871,6 +905,11 @@ export const trinsicVerifiableCredentials: ServerRoute[] = [
     method: "POST",
     path: "/checkRevocationStatus",
     handler: checkRevocationStatus,
+  },
+  {
+    method: "GET",
+    path: "/createMobileAppScanQRCodeURLDetails/{api}/{requirements}",
+    handler: createMobileAppScanQRCodeURLDetails,
   },
   {
     method: "GET",
