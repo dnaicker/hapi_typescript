@@ -184,7 +184,7 @@ describe('test suite', async () => {
 	it("createVerificationQRCodeLookup", async() => {
 		const res = await server.inject({
 			method: "GET",
-			url: "/createVerificationQRCodeLookup/urn:template:CSIR:csir-building-access-card-d54c3e94-867d-48fe-a9e7-32526b838c6f/[{building_number: '43'}]"
+			url: "/createVerificationQRCodeLookup/urn:template:CSIR:csir-building-access-card-d54c3e94-867d-48fe-a9e7-32526b838c6f/[{'building_number': '43'}]"
 		});
 
 		console.log(res.payload);
