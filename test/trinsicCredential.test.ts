@@ -198,7 +198,7 @@ describe('test suite', async () => {
 	it("createMobileAppScanQRCodeURLDetails", async() => {
 		const res = await server.inject({
 			method: "GET",
-			url: "/createMobileAppScanQRCodeURLDetails/createVerificationQRCodeLookup/{'authToken': 'you provide', 'lookup_id': 'send back to verifier', 'templateId': 'send back to verifier', 'fieldsAndValuesRequired': 'send back to verifier'}"
+			url: "/createMobileAppScanQRCodeURLDetails/createVerificationQRCodeLookup/{'api': 'createVerificationQRCodeLookup' , 'authToken': 'you provide', 'lookup_id': 'send back to verifier', 'templateId': 'send back to verifier', 'fieldsAndValuesRequired': 'send back to verifier'}"
 		});
 
 		console.log(res.payload);

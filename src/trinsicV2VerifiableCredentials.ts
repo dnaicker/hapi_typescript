@@ -682,7 +682,6 @@ async function createMobileAppScanQRCodeURLDetails(
     let obj = {};
 
     // create json object
-    obj["api"] = request.params.api;
     obj["requirements"] = request.params.requirements;
 
     console.log(obj);
@@ -908,7 +907,7 @@ export const trinsicVerifiableCredentials: ServerRoute[] = [
   },
   {
     method: "GET",
-    path: "/createMobileAppScanQRCodeURLDetails/{api}/{requirements}",
+    path: "/createMobileAppScanQRCodeURLDetails/{requirements}",
     handler: createMobileAppScanQRCodeURLDetails,
   },
   {
