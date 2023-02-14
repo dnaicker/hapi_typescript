@@ -180,7 +180,7 @@ describe('test suite', async () => {
 
 	//-------------W------
 	// createVerificationQRCodeLookup
-	// request: authToken templateId
+	// request: templateId fieldsAndValuesRequired
 	it("createVerificationQRCodeLookup", async() => {
 		const res = await server.inject({
 			method: "GET",
@@ -207,7 +207,7 @@ describe('test suite', async () => {
 	// });
 
 	//-------------------
-	// createVerificationQRCodeLookup
+	// receiveVerificationRequestWithQRCodeLookupId
 	// request: authToken templateId
 	// it("receiveVerificationRequestWithQRCodeLookupId", async() => {
 	// 	const res = await server.inject({
@@ -215,7 +215,7 @@ describe('test suite', async () => {
 	// 		payload: {
 	// 			"credential_proof": '{"@context":["https://www.w3.org/2018/credentials/v1","https://w3id.org/bbs/v1","https://schema.trinsic.cloud/CSIR/credential-title-test-3-cde56f84-ac63-457b-9667-5936723f03f9/context"],"id":"urn:uuid:64b72f1c86f34ad2a65d7b20a92adbe1","type":["CredentialTitleTest3-cde56f84-ac63-457b-9667-5936723f03f9","VerifiableCredential"],"credentialSchema":{"id":"https://schema.trinsic.cloud/CSIR/credential-title-test-3-cde56f84-ac63-457b-9667-5936723f03f9","type":"JsonSchemaValidator2018"},"credentialStatus":{"id":"urn:revocation-registry:intelligent-goodall-8QdAp6zVFeT:E95rX3mLwqYVPtt3DLcrC7#1","type":"RevocationList2020Status","revocationListCredential":"urn:revocation-registry:intelligent-goodall-8QdAp6zVFeT:E95rX3mLwqYVPtt3DLcrC7","revocationListIndex":"1"},"credentialSubject":{"id":"urn:uuid:f4ba57366bbb428ebcea16dd37550a25","building_number":"43"},"issuanceDate":"2022-11-15T07:35:07.2344257Z","issuer":"did:key:z5TcDaC3hWxTACAbQNXTKpumJUCGPjyoRiJjYBKZj6jRFGrGUR4d58BYTg4Btqi5LA2udUE4pkCqyHrNdqY5A3MoRCWX5dhiZvhrHhvdqYujfRthubmmGwFjNFBoHPjiZSNkq2p2Cu5ZSzNzHjPzxuFEYFJijNELmXybBspJBnDkVktQMBo9vWysKRk5w3c72A3C2Hvah","proof":{"type":"BbsBlsSignatureProof2020","created":"2022-11-15T07:35:07Z","nonce":"LtJOevCb/C8idEBQ8y1jvlNf0V27odDdAuAEW0cx/8oHp+YspQCRkGxvaI6d74R0j34=","proofPurpose":"assertionMethod","proofValue":"ABAA//+jrFt7Cxf523IkonGm4E6wThl/3+UBLuc9v9cvTypbNNprn69bF9IgfLBMQENjWG+u/+FcSzBPDnrlGpERoD9VQnBwxwwxjk6D157h8lFda4PjZjgtDTJc+YfyjZUC9raJEN41XCOIM/secxRfmesC2iqEDDUdMS1SDehIX2rOnuxoVDWW7rRSRdzNhOi75GcAAAB0srBc1PJ3NOk2ust62A/LubvaVY0TOufsTiorDImhWA04jSJQbtdrlXphXemn/OEcAAAAAke5S0CqN5EwhE8HjNxJcMpCVZQMBQAzanjiU357Z+xCWhF5fPV173FaTi+mEOlbKHJGb+HUf8UTNHHDG8YZsWCuPhmjZO0nlBWAbLK56F7yBUm7QjU8THhXGGvRmxSumlMgpZrAY1e93RMSOgbkd5kAAAACb+m518v7qsJCE9AD7lgW64tmlYDTqwAiv+zHC4pSYEYVcX+D5k7pZ7o3rw5O1RT+TBtldoQw9DCinY99OrFQ+A==","verificationMethod":"did:key:z5TcDaC3hWxTACAbQNXTKpumJUCGPjyoRiJjYBKZj6jRFGrGUR4d58BYTg4Btqi5LA2udUE4pkCqyHrNdqY5A3MoRCWX5dhiZvhrHhvdqYujfRthubmmGwFjNFBoHPjiZSNkq2p2Cu5ZSzNzHjPzxuFEYFJijNELmXybBspJBnDkVktQMBo9vWysKRk5w3c72A3C2Hvah#zUC711nEkxR5RikVtrNWwrmvFpuWvbmcePXajGgraXp9772W8pE8YWYcPUkcjCb6gpUfzmPVfATtoir86kLxDGRWfhitGw9AdsL2E8LAiVybKAHSU5pnpVz53wZG9pM8ShntG9K"}}',
 	// 			"lookup_id": "d544b429-0dd6-470b-b776-c773e030b715",
-	// 			"fields_and_values_required": '{"building_number": "43"}'
+	// 			"fields_and_values_required": '{building_number: 43}'
 	// 		},
 	// 		url: "/receiveVerificationRequestWithQRCodeLookupId"
 	// 	});

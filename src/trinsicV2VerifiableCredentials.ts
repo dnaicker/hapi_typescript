@@ -773,10 +773,10 @@ async function receiveVerificationRequestWithQRCodeLookupId(
     const lookup_id = (request.payload as any).lookup_id;
 
     // retrieved lookup fields
+
     const fields_and_values_required = JSON.parse((request.payload as any).fields_and_values_required);
 
     console.log(fields_and_values_required);
-
 
     // compare value_required with credential_proof 
 
@@ -785,7 +785,9 @@ async function receiveVerificationRequestWithQRCodeLookupId(
       for(let business_field in fields_and_values_required) {
         if(credential_field == business_field) {
           if(credential_proof.credentialSubject[credential_field] == fields_and_values_required[business_field]) {
-            match[credential_field] = "valid";
+            match[credential_field] = "true";
+          } else {
+            match[credential_field] = "false";
           }
         }
       }
@@ -823,13 +825,18 @@ async function receiveVerificationRequestWithQRCodeLookupId(
     // trust registry issuer check
 
     // build array of checks to return
-      // trust registry [x]
+      // revocation status []
+      // trust registry []
       // verification checks [x]
       // business check (matching fields and values) [x]
+        // expand as a different service per business
+          // auditing
+          // government
+      // downward push notification
 
     console.log(result);
 
-    const response = responseToolkit.response({verification_result: verifyResponse, lookup_result: result});
+    const response = responseToolkit.response({verification_result: verifyResponse, lookup_result: result, business_logic: match});
     return response;
   } catch (error) {
     console.log(error);
