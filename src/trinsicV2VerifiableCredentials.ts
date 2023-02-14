@@ -780,7 +780,7 @@ async function receiveVerificationRequestWithQRCodeLookupId(
 
     let format_string: string = (request.payload as any).fields_and_values_required;
     format_string = format_string.replace(/'/g, '"');
-    format_string = format_string.substring(1, test.length - 1);
+    format_string = format_string.substring(1, format_string.length - 1);
 
     fields_and_values_required = JSON.parse(format_string);
 
