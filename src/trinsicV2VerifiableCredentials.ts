@@ -774,11 +774,15 @@ async function receiveVerificationRequestWithQRCodeLookupId(
 
     // retrieved lookup fields
 
-    const fields_and_values_required = JSON.parse((request.payload as any).fields_and_values_required);
+    let fields_and_values_required = {};
 
     console.log(fields_and_values_required);
 
-    // compare value_required with credential_proof 
+    let format_string: string = (request.payload as any).fields_and_values_required;
+    format_string = format_string.replace(/'/g, '"');
+    format_string = format_string.substring(1, test.length - 1);
+
+    fields_and_values_required = JSON.parse(format_string);
 
     // loop through fields_and_values_required
     for(let credential_field in credential_proof.credentialSubject) {
