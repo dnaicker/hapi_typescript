@@ -28,9 +28,9 @@ import {
   ServerRoute,
 } from "@hapi/hapi";
 import { v4 as uuid } from "uuid";
-import { AppDataSource } from "../../../data-source"
-import { CredentialTemp } from "../../../entity/CredentialTemp"
-import { Verification } from "../../../entity/Verification";
+import { AppDataSource } from "../../database/data-source";
+import { CredentialTemp } from "../../database/entity/CredentialTemp"
+import { Verification } from "../../database/entity/Verification";
 
 const trinsic = new TrinsicService();
 
